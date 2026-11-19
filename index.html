@@ -456,9 +456,10 @@ details.raw pre{
   .source-note{font-size:9.5px}
   .tab{font-size:12px}
   .tab em{font-size:9.5px}
-  .btn{padding:8px 9px; font-size:10.5px; min-height:40px; gap:4px}
-  .header-actions{gap:5px}
-  .header-actions .btn{flex:0 1 auto}
+  .btn{padding:9px 10px; font-size:11px; min-height:40px; gap:4px}
+  .header-actions{display:grid; grid-template-columns:1fr 1fr; gap:6px}
+  .header-actions .btn{width:100%; justify-content:center}
+  .header-actions .btn.primary{grid-column:1 / -1}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
