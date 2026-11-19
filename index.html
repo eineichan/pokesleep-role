@@ -330,7 +330,8 @@ details.memo[open] summary .arw{transform:rotate(90deg)}
   border:0; font-family:inherit; font-size:11px; font-weight:800; padding:7px 10px; border-radius:10px;
   background:#eef9ff; color:#2c6b83; cursor:pointer; min-height:34px;
 }
-.source-note{position:relative; z-index:2; margin-top:9px; font-size:10px; color:var(--ink-faint); font-weight:600; line-height:1.5}
+.source-note{position:relative; z-index:2; margin-top:9px; font-size:10.5px; color:#9a8aa0; font-weight:600; line-height:1.55}
+.source-note + .source-note{margin-top:4px}
 
 /* セクション見出し */
 .sec-head{display:flex; align-items:center; gap:8px; margin:16px 4px 10px; font-size:13px; font-weight:800; color:#6b5570}
@@ -455,7 +456,9 @@ details.raw pre{
   .source-note{font-size:9.5px}
   .tab{font-size:12px}
   .tab em{font-size:9.5px}
-  .btn{padding:10px 13px; font-size:12.5px}
+  .btn{padding:9px 11px; font-size:11.5px; min-height:42px}
+  .header-actions{gap:6px}
+  .header-actions .btn{flex:0 1 auto}
 }
 @media(prefers-reduced-motion:reduce){
   *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
@@ -765,7 +768,7 @@ function numHTML(item){
   return '<div class="numarea">' +
       '<div class="numrow">' +
         '<label for="n_' + item.id + '">1日の個数</label>' +
-        '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="number" inputmode="decimal" step="0.1" min="0" placeholder="0.0" value="' + (state.items[item.id].val || '') + '">' +
+        '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="number" inputmode="decimal" step="0.1" min="0" placeholder="78.5" value="' + (state.items[item.id].val || '') + '">' +
         '<span class="unit">個</span>' +
       '</div>' +
       '<div class="target-line"><span>目標（3食）</span><b>' + t + ' 個</b></div>' +
@@ -807,7 +810,7 @@ function cardHTML(item){
     numHTML(item) +
     '<div class="picks"><span class="lbl">🎯 候補</span>' + picks + '</div>' +
     (item.note ? '<div class="source-note">💡 ' + item.note + '</div>' : '') +
-    (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>ほか ' + item.recipe2 : '') + (item.ref2 ? '<br>参考 ' + item.ref2 : '') + '</div>' : '') +
+    (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>　ほか ' + item.recipe2 : '') + (item.ref2 ? '<br>👀 参考 ' + item.ref2 : '') + '</div>' : '') +
     '<details class="memo"><summary><span class="arw">▶</span>📝 メモ・手持ち・目標の変更</summary>' +
       '<div class="memo-body">' +
         '<div class="row"><span>手持ち</span><input data-field="poke" data-id="' + item.id + '" placeholder="例：ゲンガー（たまご）" value="' + escapeAttr(poke) + '"></div>' +
@@ -1075,22 +1078,19 @@ async function runOCR(file){
     // 前処理（縮小＋グレースケール＋コントラスト）
     const processed = await preprocess(file).catch(()=>file);
 
-    await loadTesseractLib();
     bar.style.width = '22%';
-    status.childNodes[0].nodeValue = '読み取りエンジンを準備中…';
+    status.childNodes[0].nodeValue = '読み取りエンジンを準備中…（初回だけ少し待ってね）';
 
-    const worker = await Tesseract.createWorker('eng', 1, {
-      logger: (m)=>{
-        if(m.status === 'recognizing text'){
-          bar.style.width = (22 + Math.round((m.progress||0)*70)) + '%';
-          status.childNodes[0].nodeValue = 'よみとりちゅう… ' + Math.round((m.progress||0)*100) + '%';
-        } else if(m.status && m.progress){
-          status.childNodes[0].nodeValue = '準備中… ' + m.status;
-        }
+    ocrLogger = (m)=>{
+      if(m.status === 'recognizing text'){
+        bar.style.width = (22 + Math.round((m.progress||0)*70)) + '%';
+        status.childNodes[0].nodeValue = 'よみとりちゅう… ' + Math.round((m.progress||0)*100) + '%';
+      } else if(m.status && m.progress){
+        status.childNodes[0].nodeValue = '準備中… ' + m.status;
       }
-    });
+    };
+    const worker = await getWorker();
     const { data } = await worker.recognize(processed);
-    await worker.terminate();
 
     bar.style.width = '100%';
     status.childNodes[0].nodeValue = 'よみとれたよ！あてはまる数字をタップしてね♡';
@@ -1130,6 +1130,19 @@ function preprocess(file){
     im.onerror = ()=>{ URL.revokeObjectURL(u); reject(new Error('img')); };
     im.src = u;
   });
+}
+
+let ocrWorkerPromise = null;
+let ocrLogger = null;
+function getWorker(){
+  if(!ocrWorkerPromise){
+    ocrWorkerPromise = (async()=>{
+      await loadTesseractLib();
+      return await Tesseract.createWorker('eng', 1, { logger: (m)=>{ if(ocrLogger) ocrLogger(m); } });
+    })();
+    ocrWorkerPromise.catch(()=>{ ocrWorkerPromise = null; });
+  }
+  return ocrWorkerPromise;
 }
 
 function loadTesseractLib(){
