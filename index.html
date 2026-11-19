@@ -775,7 +775,7 @@ function numHTML(item){
   return '<div class="numarea">' +
       '<div class="numrow">' +
         '<label for="n_' + item.id + '">1日の個数</label>' +
-        '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="number" inputmode="decimal" step="0.1" min="0" placeholder="78.5" value="' + (state.items[item.id].val || '') + '">' +
+        '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="number" inputmode="decimal" step="0.1" min="0" placeholder="" value="' + (state.items[item.id].val || '') + '">' +
         '<span class="unit">個</span>' +
       '</div>' +
       '<div class="target-line"><span>目標（3食）</span><b>' + t + ' 個</b></div>' +
