@@ -739,7 +739,7 @@ function burst(el){
 }
 
 /* ===================== 描画 ===================== */
-function judgeHTML(item){
+function judgeBox(item){
   if(item.kind !== 'food') return '';
   const t = targetOf(item);
   const n = num(state.items[item.id].val);
@@ -756,6 +756,12 @@ function judgeHTML(item){
   const w = Math.min(100, Math.round(ratio*100));
   const barCls = cls === 'clear' ? 'clear' : (cls === 'ok' ? 'ok' : '');
   const bar = '<div class="mini-bar"><i class="' + barCls + '" style="width:' + w + '%"></i></div>';
+  return judge + bar;
+}
+
+function numHTML(item){
+  if(item.kind !== 'food') return '';
+  const t = targetOf(item);
   return '<div class="numarea">' +
       '<div class="numrow">' +
         '<label for="n_' + item.id + '">1日の個数</label>' +
@@ -763,7 +769,7 @@ function judgeHTML(item){
         '<span class="unit">個</span>' +
       '</div>' +
       '<div class="target-line"><span>目標（3食）</span><b>' + t + ' 個</b></div>' +
-      judge + bar +
+      '<div class="judgewrap">' + judgeBox(item) + '</div>' +
     '</div>' +
     '<button class="ocr-btn" data-ocr="' + item.id + '">📸 スクショから読み取る</button>';
 }
@@ -798,7 +804,7 @@ function cardHTML(item){
     '<button class="status st-' + st + '" data-st="' + item.id + '" aria-label="状態を切りかえる（いま ' + ST_LABEL[st] + '）">' +
       ST_LABEL[st] + '<span class="hint">タップで切替</span>' +
     '</button>' +
-    judgeHTML(item) +
+    numHTML(item) +
     '<div class="picks"><span class="lbl">🎯 候補</span>' + picks + '</div>' +
     (item.note ? '<div class="source-note">💡 ' + item.note + '</div>' : '') +
     (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>ほか ' + item.recipe2 : '') + (item.ref2 ? '<br>参考 ' + item.ref2 : '') + '</div>' : '') +
@@ -894,6 +900,7 @@ document.addEventListener('click', (e)=>{
     card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
     t.className = 'status st-' + it.st;
     t.innerHTML = ST_LABEL[it.st] + '<span class="hint">タップで切替</span>';
+    t.setAttribute('aria-label', '状態を切りかえる（いま ' + ST_LABEL[it.st] + '）');
     const rb = card.querySelector('.ribbon-badge');
     if(rb){ const tmp = document.createElement('div'); tmp.innerHTML = ribbonHTML(it.st); rb.replaceWith(tmp.firstElementChild); }
     card.classList.toggle('s-done', it.st===2);
@@ -943,18 +950,9 @@ document.addEventListener('input', (e)=>{
 function updateCardJudge(id){
   const item = ALL.find(x=>x.id===id); if(!item || item.kind!=='food') return;
   const card = document.querySelector('.card[data-id="' + id + '"]'); if(!card) return;
-  const numarea = card.querySelector('.numarea'); if(!numarea) return;
-  const fresh = document.createElement('div');
-  fresh.innerHTML = judgeHTML(item);
-  const newArea = fresh.querySelector('.numarea');
-  const keepFocus = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.num === id;
-  const selStart = keepFocus ? document.activeElement.selectionStart : null;
-  numarea.replaceWith(newArea);
-  if(keepFocus){
-    const inp = newArea.querySelector('input');
-    inp.focus();
-    try{ inp.setSelectionRange(selStart, selStart); }catch(_){}
-  }
+  const wrap = card.querySelector('.judgewrap'); if(!wrap) return;
+  wrap.innerHTML = judgeBox(item);
+  const newArea = wrap;
   // ラインを超えた瞬間だけお祝い（ドパ）
   const t = targetOf(item); const n = num(state.items[id].val);
   const prev = card.dataset.prevRatio === undefined ? null : parseFloat(card.dataset.prevRatio);
