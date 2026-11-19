@@ -665,6 +665,14 @@ const SKILL = [
   { id:'s_dream', emoji:'✨', name:'ゆめのかけら', picks:['ムシャーナ','マルノーム','ルカリオ'] }
 ];
 
+/* 参考個数がいちばん多いポケモン（強調表示用） */
+const BEST = {
+  herb:'カイリュー', corn:'キテルグマ', ginger:'バンギラス', milk:'カメックス', cacao:'ドオー',
+  honey:'フシギバナ', tomato:'レントラー', potato:'ハルクジラ', meat:'ボスゴドラ', egg:'ハピナス',
+  soy:'ゴローニャ', oil:'レントラー', apple:'ラウドボーン', mushroom:'ミカルゲ', leek:'カモネギ',
+  coffee:'クワガノン', pumpkin:'パンプジン', avocado:'フライゴン', nuts:'エルフーン'
+};
+
 /* ===================== 状態 ===================== */
 const KEY = 'pokesleep-role-v1';
 const ALL = [
@@ -785,11 +793,9 @@ function cardHTML(item){
   if(item.kind === 'skill') badges += '<span class="badge pink">スキル枠</span>';
   if(item.isNew) badges += '<span class="badge warn">NEW</span>';
 
-  const picks = item.picks.map((p,i)=>{
-    const best = (i===0 && !/専門なし|兼任|メタモンor/.test(p));
-    let extra = '';
-    if(item.kind === 'food' && i===0 && item.ref) extra = '<small style="display:block;font-weight:700;font-size:9.5px;color:#b98aa2">' + item.ref + '</small>';
-    return '<span class="pick ' + (best?'best':'') + '">' + p + extra + '</span>';
+  const picks = item.picks.map((p)=>{
+    const isBest = !!BEST[item.id] && p.indexOf(BEST[item.id]) === 0;
+    return '<span class="pick ' + (isBest?'best':'') + '">' + (isBest?'👑 ':'') + p + '</span>';
   }).join('');
 
   const t = targetOf(item);
@@ -811,7 +817,7 @@ function cardHTML(item){
     (item.note ? '<div class="source-note">💡 ' + item.note + '</div>' : '') +
     (item.kind==='berry' ? '<div class="source-note">💡 きのみSを持った子を1匹。島ごとに入れかえる枠だから、きのみSだけ見ればOK</div>' : '') +
     (item.kind==='skill' ? '<div class="source-note">💡 パーティの要。この役割を1匹キープできればOK</div>' : '') +
-    (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>　ほか ' + item.recipe2 : '') + (item.ref2 ? '<br>👀 参考 ' + item.ref2 : '') + '</div>' : '') +
+    (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>　ほか ' + item.recipe2 : '') + '<br>👀 参考 ' + item.ref + (item.ref2 ? ' ・ ' + item.ref2 : '') + '</div>' : '') +
     '<details class="memo"><summary><span class="arw">▶</span>📝 メモ・手持ち・目標の変更</summary>' +
       '<div class="memo-body">' +
         '<div class="row"><span>手持ち</span><input data-field="poke" data-id="' + item.id + '" placeholder="例：ゲンガー（たまご）" value="' + escapeAttr(poke) + '"></div>' +
