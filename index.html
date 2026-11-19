@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ffd6e6">
+<title>📋 ポケスリ役割チェック</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --aqua-50:#f2fbff; --aqua-100:#e2f6ff; --aqua-200:#c8ecfb; --aqua-300:#a8dff4;
+  --pink-50:#fff5f9; --pink-100:#ffe6f0; --pink-200:#ffd0e3; --pink-300:#ffb3d1; --pink-400:#ff8fbb;
+  --milk:#fffdfe; --gold:#ffe6a3; --gold-deep:#f3c14f;
+  --ink:#57435c; --ink-soft:#8a7690; --ink-faint:#b3a3b8;
+  --ok:#3fae8a; --ok-bg:#e4f8f0; --warn:#e0872f; --warn-bg:#fff3e2;
+  --shadow-s:0 2px 6px rgba(190,140,175,.16);
+  --shadow-m:0 8px 20px rgba(180,130,170,.18);
+  --shadow-p:0 10px 24px rgba(255,143,187,.32);
+  --r-l:26px; --r-m:18px; --r-s:12px;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:"M PLUS Rounded 1c","Hiragino Maru Gothic ProN","Rounded Mplus 1c",-apple-system,"Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 12% 4%, #fff2f8 0%, rgba(255,242,248,0) 42%),
+    radial-gradient(circle at 88% 0%, #e8f9ff 0%, rgba(232,249,255,0) 40%),
+    linear-gradient(180deg,#f6fdff 0%, #fdf6fa 46%, #f5fbff 100%);
+  background-attachment:fixed;
+  min-height:100vh;
+  line-height:1.55;
+  font-size:15px;
+  padding-bottom:calc(96px + env(safe-area-inset-bottom));
+  overflow-x:hidden;
+}
+/* 背景のドット＆きらきら */
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:radial-gradient(rgba(255,179,209,.30) 1.4px, transparent 1.5px),
+                   radial-gradient(rgba(168,223,244,.34) 1.3px, transparent 1.4px);
+  background-size:24px 24px, 24px 24px;
+  background-position:0 0, 12px 12px;
+  opacity:.55;
+}
+.wrap{position:relative; z-index:1; max-width:1080px; margin:0 auto; padding:0 12px}
+
+/* ===== ヘッダー ===== */
+header{
+  position:relative; margin:10px 0 4px; padding:20px 16px 18px;
+  background:linear-gradient(160deg,#ffffff 0%,#fff7fb 55%,#f0fbff 100%);
+  border-radius:30px;
+  box-shadow:var(--shadow-m);
+  border:2px solid #fff;
+  overflow:hidden;
+}
+header::after{
+  content:""; position:absolute; inset:6px; border-radius:24px; pointer-events:none;
+  border:1.5px dashed rgba(255,179,209,.55);
+}
+.ribbon-deco{position:absolute; top:-6px; right:8px; width:112px; opacity:.55; pointer-events:none}
+.sound-btn{
+  position:absolute; top:10px; right:10px; z-index:7; width:46px; height:46px; border-radius:50%; border:0;
+  cursor:pointer; font-size:19px; line-height:1; display:grid; place-items:center; color:#7a4b63;
+  background:linear-gradient(180deg,#ffffff,#ffeaf3);
+  box-shadow:0 3px 0 #ffd3e5, 0 6px 14px rgba(255,160,200,.28), inset 0 1px 0 #fff;
+}
+.sound-btn:active{transform:translateY(2px); box-shadow:0 1px 0 #ffd3e5,0 3px 8px rgba(255,160,200,.24)}
+.sound-btn[data-muted="true"]{color:#a798ad; background:linear-gradient(180deg,#fff,#f4f1f6); box-shadow:0 3px 0 #e6dfeb,0 6px 14px rgba(170,150,180,.2),inset 0 1px 0 #fff}
+.kicker{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11.5px; font-weight:800; letter-spacing:.08em; color:#d8608f;
+  background:var(--pink-100); border:1.5px solid #fff; border-radius:999px;
+  padding:3px 12px; box-shadow:var(--shadow-s);
+}
+h1{
+  margin:9px 0 4px; font-size:22px; font-weight:800; letter-spacing:.01em;
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  color:#4b3650;
+  text-shadow:0 1px 0 #fff;
+}
+h1 .h1-sub{font-size:12px; font-weight:700; color:var(--ink-soft); letter-spacing:.06em}
+.intro{margin:2px 0 12px; font-size:12.5px; color:var(--ink-soft); font-weight:500}
+.header-actions{display:flex; gap:8px; flex-wrap:wrap; align-items:center; position:relative; z-index:2}
+
+.btn{
+  appearance:none; border:0; cursor:pointer; font-family:inherit; font-weight:800;
+  border-radius:999px; padding:11px 16px; font-size:13px; color:#7a4b63;
+  background:linear-gradient(180deg,#ffffff 0%, #ffeef6 100%);
+  box-shadow:0 3px 0 #ffd3e5, 0 6px 14px rgba(255,160,200,.28), inset 0 1px 0 #fff;
+  transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+  min-height:44px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;
+}
+.btn:active{transform:translateY(3px); box-shadow:0 0 0 #ffd3e5, 0 3px 8px rgba(255,160,200,.22), inset 0 1px 0 #fff}
+.btn.primary{
+  color:#fff; background:linear-gradient(180deg,#ffa8cb 0%, #ff85b6 55%, #ff739f 100%);
+  box-shadow:0 4px 0 #e2608f, 0 8px 18px rgba(255,120,170,.38), inset 0 1px 0 rgba(255,255,255,.65);
+  text-shadow:0 1px 1px rgba(190,60,110,.28);
+}
+.btn.aqua{
+  color:#2c6b83; background:linear-gradient(180deg,#ffffff 0%, #e3f7ff 100%);
+  box-shadow:0 3px 0 #c3e9f8, 0 6px 14px rgba(120,200,230,.24), inset 0 1px 0 #fff;
+}
+.btn.small{padding:8px 12px; font-size:12px; min-height:38px}
+
+/* ===== 進捗 ===== */
+.progress-card{
+  margin:12px 0 10px; padding:14px 16px; border-radius:var(--r-l);
+  background:linear-gradient(150deg,#ffffff 0%,#fffafc 60%,#f2fbff 100%);
+  box-shadow:var(--shadow-m); border:2px solid #fff; position:relative; overflow:hidden;
+}
+.progress-top{display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap}
+.progress-top b{font-size:14px; font-weight:800}
+.progress-top .cnt{font-variant-numeric:tabular-nums; font-weight:800; color:#d8608f; font-size:16px}
+.bar{
+  position:relative; height:16px; margin-top:9px; border-radius:999px;
+  background:#eef6fb; box-shadow:inset 0 2px 4px rgba(160,190,210,.28); overflow:hidden;
+}
+.bar > i{
+  display:block; height:100%; width:0%; border-radius:999px;
+  background:linear-gradient(90deg,#a8dff4 0%, #ffb3d1 60%, #ff8fbb 100%);
+  box-shadow:0 0 10px rgba(255,143,187,.55), inset 0 1px 0 rgba(255,255,255,.7);
+  transition:width .45s cubic-bezier(.22,1.2,.36,1);
+}
+.bar > i::after{
+  content:""; position:absolute; inset:0;
+  background-image:repeating-linear-gradient(115deg, rgba(255,255,255,.45) 0 6px, transparent 6px 14px);
+  animation:candy 2.4s linear infinite;
+}
+@keyframes candy{from{background-position:0 0}to{background-position:40px 0}}
+.progress-sub{display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-weight:700}
+.progress-sub span{display:inline-flex; align-items:center; gap:4px}
+.sec-bars{display:grid; gap:6px; margin-top:11px; padding-top:10px; border-top:1.5px dashed #ffe0ee}
+.sec-row{display:flex; align-items:center; gap:8px; font-size:11.5px; font-weight:800; color:var(--ink-soft)}
+.sec-row .nm{width:74px; flex:0 0 auto; display:flex; align-items:center; gap:4px}
+.sec-row .sec-bar{flex:1; height:10px; border-radius:999px; background:#eef6fb; overflow:hidden; box-shadow:inset 0 1px 3px rgba(160,190,210,.26)}
+.sec-row .sec-bar > i{display:block; height:100%; width:0; border-radius:999px; background:linear-gradient(90deg,#a8dff4,#ffb3d1); transition:width .4s ease}
+.sec-row b{font-variant-numeric:tabular-nums; color:#d8608f; min-width:44px; text-align:right}
+
+/* ===== タブ ===== */
+.tabs{
+  display:flex; gap:6px; padding:6px; border-radius:999px; background:#ffffffcc;
+  box-shadow:var(--shadow-m); border:2px solid #fff; margin:10px 0;
+  position:sticky; top:8px; z-index:20; backdrop-filter:blur(10px);
+}
+.tab{
+  flex:1; border:0; background:transparent; font-family:inherit; cursor:pointer;
+  border-radius:999px; padding:9px 6px; font-size:13px; font-weight:800; color:var(--ink-soft);
+  display:flex; flex-direction:column; align-items:center; gap:1px; min-height:50px;
+  transition:all .18s ease; line-height:1.2;
+}
+.tab em{font-style:normal; font-size:10.5px; font-weight:700; opacity:.85; font-variant-numeric:tabular-nums}
+.tab[aria-selected="true"]{
+  color:#fff; background:linear-gradient(180deg,#ffb0d0,#ff87b8);
+  box-shadow:0 3px 0 #e2608f, 0 6px 14px rgba(255,120,170,.32), inset 0 1px 0 rgba(255,255,255,.6);
+}
+.tab:not([aria-selected="true"]):active{background:#fff0f7}
+
+/* ===== フィルタ ===== */
+.filters{display:flex; gap:7px; align-items:center; flex-wrap:wrap; margin:0 0 12px}
+.chip{
+  border:0; font-family:inherit; cursor:pointer; border-radius:999px; padding:8px 14px;
+  font-size:12px; font-weight:800; color:var(--ink-soft); background:#fff;
+  box-shadow:var(--shadow-s); border:2px solid #fff; min-height:40px;
+  transition:all .15s ease;
+}
+.chip[aria-pressed="true"]{
+  color:#2c6b83; background:linear-gradient(180deg,#ffffff,#dff5ff);
+  border-color:#bfe8f7; box-shadow:0 2px 0 #c9ecf9,0 5px 12px rgba(150,210,235,.3);
+}
+.filters .spacer{flex:1}
+
+/* ===== カード ===== */
+.grid{display:grid; grid-template-columns:1fr; gap:12px}
+@media(min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+@media(min-width:960px){.grid{grid-template-columns:1fr 1fr 1fr}}
+
+.card{
+  --s-color:#d9d2e0; --s-tint:rgba(217,210,224,.12);
+  position:relative; border-radius:var(--r-l); padding:16px 14px 12px;
+  background:linear-gradient(165deg,#ffffff 0%, #fffbfd 62%, #f4fcff 100%);
+  border:2px solid #fff;
+  box-shadow:var(--shadow-m);
+  overflow:hidden;
+  transition:transform .16s ease, box-shadow .16s ease, background .25s ease;
+}
+.card .edge{position:absolute; left:0; top:18px; bottom:18px; width:7px; border-radius:0 999px 999px 0;
+  background:linear-gradient(180deg,var(--s-color),rgba(255,255,255,.6)); box-shadow:2px 0 6px var(--s-tint)}
+.card.s-search{--s-color:#7ccbe8; --s-tint:rgba(120,200,235,.3);
+  background:linear-gradient(165deg,#ffffff 0%, #f3fcff 52%, #e7f8ff 100%);
+  box-shadow:0 8px 22px rgba(140,200,232,.26), 0 0 0 2px #d8f1fb, inset 0 0 0 2px #fff}
+.card.s-done{--s-color:#ff8fbb; --s-tint:rgba(255,140,190,.35);
+  background:linear-gradient(165deg,#ffffff 0%, #fff6fa 52%, #ffeaf3 100%);
+  box-shadow:0 8px 24px rgba(255,140,190,.28), 0 0 0 2px #ffd3e5, inset 0 0 0 2px #fff}
+.ribbon-badge{
+  position:absolute; top:0; right:0; z-index:6; min-width:64px; padding:7px 10px 9px;
+  display:flex; flex-direction:column; align-items:center; gap:1px; line-height:1.05;
+  font-size:10px; font-weight:800; color:#fff; letter-spacing:.02em;
+  border-radius:0 23px 0 20px;
+  background:linear-gradient(160deg,#e3dbe7,#cfc5d7);
+  box-shadow:0 4px 12px rgba(150,120,150,.22), inset 0 1px 0 rgba(255,255,255,.5);
+  text-shadow:0 1px 1px rgba(120,90,120,.18);
+}
+.ribbon-badge .ic{font-size:17px; line-height:1}
+.ribbon-badge.st-1{background:linear-gradient(160deg,#93dbf4,#56bde2); box-shadow:0 4px 12px rgba(80,175,215,.32), inset 0 1px 0 rgba(255,255,255,.5)}
+.ribbon-badge.st-2{background:linear-gradient(160deg,#ffa8cb,#ff74ad); box-shadow:0 4px 14px rgba(255,105,165,.42), inset 0 1px 0 rgba(255,255,255,.5)}
+.card::before{
+  content:""; position:absolute; inset:5px; border-radius:20px; pointer-events:none;
+  border:1.4px dashed rgba(255,179,209,.42);
+}
+.card::after{
+  content:""; position:absolute; right:-26px; bottom:-30px; width:96px; height:96px; border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, rgba(200,236,251,.55), rgba(200,236,251,0) 70%);
+  pointer-events:none;
+}
+.card.pop{animation:pop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{0%{transform:scale(1)}38%{transform:scale(1.035)}100%{transform:scale(1)}}
+.card.s-done{box-shadow:0 8px 22px rgba(255,150,195,.26), 0 0 0 2px rgba(255,179,209,.5), inset 0 0 0 2px #fff}
+.card.s-search{box-shadow:0 8px 22px rgba(150,210,235,.3), 0 0 0 2px rgba(168,223,244,.6), inset 0 0 0 2px #fff}
+
+.card-head{display:flex; align-items:flex-start; gap:11px; position:relative; z-index:2; padding-right:56px}
+.emoji{
+  flex:0 0 auto; width:58px; height:58px; border-radius:20px; display:grid; place-items:center;
+  font-size:31px; line-height:1; background:linear-gradient(160deg,#ffffff,#fff0f7);
+  box-shadow:0 3px 0 #ffd9e8, 0 8px 18px rgba(255,170,200,.26), inset 0 1px 0 #fff;
+  border:2px solid #fff; position:relative;
+}
+.emoji::after{content:""; position:absolute; inset:-5px; border-radius:24px; border:1.5px dashed rgba(255,179,209,.5); z-index:-1}
+.card-title{flex:1; min-width:0}
+.card-title h3{margin:0; font-size:16px; font-weight:800; letter-spacing:.01em; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.card-title .sub{font-size:11px; color:var(--ink-faint); font-weight:700; letter-spacing:.02em}
+.badge{
+  display:inline-flex; align-items:center; gap:3px; font-size:10.5px; font-weight:800;
+  padding:2px 8px; border-radius:999px; background:var(--aqua-100); color:#2c6b83; border:1.4px solid #fff;
+  box-shadow:var(--shadow-s);
+}
+.badge.warn{background:var(--warn-bg); color:#a5651c}
+.badge.pink{background:var(--pink-100); color:#d8608f}
+
+/* 状態ボタン */
+.status{
+  position:relative; z-index:2; width:100%; margin:11px 0 0; border:0; cursor:pointer;
+  font-family:inherit; font-weight:800; font-size:13.5px; border-radius:16px; padding:11px 12px;
+  display:flex; align-items:center; justify-content:center; gap:7px; min-height:46px;
+  color:#7d6a83; background:linear-gradient(180deg,#ffffff,#f3f0f5);
+  box-shadow:0 3px 0 #e6dfeb, 0 6px 12px rgba(170,150,180,.16), inset 0 1px 0 #fff;
+  transition:transform .1s ease, box-shadow .1s ease;
+}
+.status:active{transform:translateY(2px); box-shadow:0 1px 0 #e6dfeb, 0 3px 8px rgba(170,150,180,.14)}
+.status.st-0{color:#7d6a83; background:linear-gradient(180deg,#ffffff,#f4f1f6); box-shadow:0 3px 0 #e6dfeb,0 6px 12px rgba(170,150,180,.16),inset 0 1px 0 #fff}
+.status.st-1{color:#2c6b83; background:linear-gradient(180deg,#ffffff,#dff5ff); box-shadow:0 3px 0 #bfe8f7,0 6px 12px rgba(140,205,235,.28),inset 0 1px 0 #fff}
+.status.st-2{color:#fff; background:linear-gradient(180deg,#ffb4d2,#ff8abb 60%,#ff7cae); box-shadow:0 3px 0 #e2608f,0 7px 16px rgba(255,120,170,.38),inset 0 1px 0 rgba(255,255,255,.55); text-shadow:0 1px 1px rgba(190,60,110,.25)}
+.status .hint{font-size:10px; font-weight:700; opacity:.75}
+
+/* 数値エリア */
+.numarea{position:relative; z-index:2; margin-top:11px; padding:11px; border-radius:18px;
+  background:linear-gradient(165deg,#fbfeff,#fff8fc); border:1.5px solid #eaf6fc;
+  box-shadow:inset 0 2px 6px rgba(180,205,220,.14)}
+.numrow{display:flex; align-items:center; gap:8px}
+.numrow label{font-size:11.5px; font-weight:800; color:var(--ink-soft); white-space:nowrap}
+.numin{
+  flex:1; min-width:0; font-family:inherit; font-size:19px; font-weight:800; font-variant-numeric:tabular-nums;
+  padding:9px 12px; border-radius:14px; border:2px solid #ddeff8; background:#fff; color:#3f3145;
+  text-align:right; box-shadow:inset 0 2px 4px rgba(170,200,215,.16); -moz-appearance:textfield;
+}
+.numin::-webkit-outer-spin-button,.numin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.numin:focus{outline:0; border-color:#ffb3d1; box-shadow:0 0 0 4px rgba(255,179,209,.24), inset 0 2px 4px rgba(170,200,215,.12)}
+.unit{font-size:12px; font-weight:800; color:var(--ink-faint)}
+.target-line{display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:8px; font-size:11px; color:var(--ink-soft); font-weight:700}
+.target-line b{font-variant-numeric:tabular-nums; color:#3f3145; font-size:13px}
+.judge{margin-top:8px; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:space-between; gap:6px;
+  padding:9px 12px; border-radius:14px; background:#f5f2f6; color:#87738d;
+  box-shadow:inset 0 1px 3px rgba(120,100,130,.08)}
+.judge .pct{font-variant-numeric:tabular-nums; font-size:12px; opacity:.9}
+.judge .lbltxt{display:flex; align-items:center; gap:6px}
+.judge.ok{color:#237f65; background:linear-gradient(180deg,#f0fdf8,#d9f5ea);
+  box-shadow:0 2px 0 #bfe9da, 0 6px 14px rgba(110,205,175,.22), inset 0 1px 0 #fff}
+.judge.clear{color:#bf2f6a; background:linear-gradient(180deg,#fff2f8,#ffd9e9);
+  box-shadow:0 2px 0 #ffc0d9, 0 7px 16px rgba(255,130,185,.28), inset 0 1px 0 #fff}
+.judge.low{color:#b0721c; background:linear-gradient(180deg,#fffbf2,#ffeed8);
+  box-shadow:0 2px 0 #ffe0b5, 0 6px 14px rgba(240,190,120,.2), inset 0 1px 0 #fff}
+.mini-bar{height:15px; border-radius:999px; background:#eaf4fa; margin-top:8px; overflow:hidden; position:relative;
+  box-shadow:inset 0 2px 5px rgba(150,185,205,.34)}
+.mini-bar > i{display:block; height:100%; width:0; border-radius:999px; transition:width .45s cubic-bezier(.22,1.2,.36,1);
+  background:linear-gradient(90deg,#a8dff4,#ffb3d1); box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 0 8px rgba(255,150,195,.45)}
+.mini-bar > i.ok{background:linear-gradient(90deg,#b8f0de,#4fc79f)}
+.mini-bar > i.clear{background:linear-gradient(90deg,#ffd7a8,#ff8fbb)}
+
+/* 読み取りボタン */
+.ocr-btn{
+  margin-top:9px; width:100%; border:0; cursor:pointer; font-family:inherit; font-weight:800; font-size:12.5px;
+  border-radius:14px; padding:10px; min-height:44px; display:flex; align-items:center; justify-content:center; gap:6px;
+  color:#2c6b83; background:linear-gradient(180deg,#ffffff,#eaf9ff);
+  box-shadow:0 2px 0 #cfeeF9, 0 5px 12px rgba(140,200,230,.2), inset 0 1px 0 #fff;
+  border:1.5px dashed #bfe8f7;
+}
+.ocr-btn:active{transform:translateY(2px)}
+
+/* ポケモン候補 */
+.picks{position:relative; z-index:2; margin-top:10px; display:flex; flex-wrap:wrap; gap:5px; align-items:center}
+.picks .lbl{font-size:10.5px; font-weight:800; color:var(--ink-faint); margin-right:2px}
+.pick{
+  font-size:11.5px; font-weight:800; padding:4px 10px; border-radius:999px; color:#6b5570;
+  background:#fff; border:1.5px solid #f0e6f2; box-shadow:var(--shadow-s);
+}
+.pick.best{color:#c85585; background:linear-gradient(180deg,#fff,#ffeef6); border-color:#ffd0e3}
+
+/* メモ */
+details.memo{position:relative; z-index:2; margin-top:10px}
+details.memo summary{
+  list-style:none; cursor:pointer; font-size:11.5px; font-weight:800; color:var(--ink-soft);
+  display:flex; align-items:center; gap:5px; padding:7px 2px; min-height:38px;
+}
+details.memo summary::-webkit-details-marker{display:none}
+details.memo summary .arw{transition:transform .2s ease; font-size:10px}
+details.memo[open] summary .arw{transform:rotate(90deg)}
+.memo-body{display:grid; gap:7px; padding:2px 0 2px}
+.memo-body input{
+  width:100%; font-family:inherit; font-size:13px; font-weight:600; padding:9px 11px; border-radius:12px;
+  border:1.5px solid #eef0f6; background:#fff; color:#4b3c52;
+}
+.memo-body input:focus{outline:0; border-color:#c8ecfb; box-shadow:0 0 0 3px rgba(200,236,251,.5)}
+.memo-body .row{display:flex; gap:7px; align-items:center}
+.memo-body .row span{font-size:10.5px; font-weight:800; color:var(--ink-faint); white-space:nowrap; min-width:52px}
+.tgt-edit{display:flex; gap:6px; align-items:center}
+.tgt-edit input{width:82px; text-align:right; font-variant-numeric:tabular-nums}
+.tgt-edit button{
+  border:0; font-family:inherit; font-size:11px; font-weight:800; padding:7px 10px; border-radius:10px;
+  background:#eef9ff; color:#2c6b83; cursor:pointer; min-height:34px;
+}
+.source-note{position:relative; z-index:2; margin-top:9px; font-size:10px; color:var(--ink-faint); font-weight:600; line-height:1.5}
+
+/* セクション見出し */
+.sec-head{display:flex; align-items:center; gap:8px; margin:16px 4px 10px; font-size:13px; font-weight:800; color:#6b5570}
+.sec-head .line{flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,rgba(255,179,209,.6),rgba(200,236,251,.2))}
+
+/* ===== モーダル ===== */
+.modal{
+  position:fixed; inset:0; z-index:100; display:none; align-items:flex-end; justify-content:center;
+  background:rgba(88,60,80,.32); backdrop-filter:blur(3px);
+}
+.modal.open{display:flex}
+@media(min-width:640px){.modal{align-items:center}}
+.sheet{
+  width:100%; max-width:520px; max-height:90vh; overflow:auto;
+  background:linear-gradient(170deg,#ffffff,#fff9fc 60%,#f4fcff);
+  border-radius:28px 28px 0 0; padding:18px 16px calc(20px + env(safe-area-inset-bottom));
+  box-shadow:0 -8px 40px rgba(120,80,110,.28); position:relative;
+  animation:sheetUp .28s cubic-bezier(.22,1.1,.36,1);
+}
+@media(min-width:640px){.sheet{border-radius:28px}}
+@keyframes sheetUp{from{transform:translateY(30px); opacity:.6}to{transform:translateY(0); opacity:1}}
+.sheet h2{margin:0 0 4px; font-size:17px; font-weight:800; display:flex; align-items:center; gap:7px}
+.sheet .cap{font-size:12px; color:var(--ink-soft); font-weight:600; margin:0 0 12px}
+.sheet-close{
+  position:absolute; top:12px; right:12px; width:38px; height:38px; border-radius:50%; border:0;
+  background:#fff; box-shadow:var(--shadow-s); font-size:16px; cursor:pointer; color:var(--ink-soft);
+}
+.file-drop{
+  border:2px dashed #ffc9dd; border-radius:20px; padding:18px 14px; text-align:center;
+  background:linear-gradient(170deg,#fff9fc,#f4fcff); cursor:pointer; display:block;
+}
+.file-drop .big{font-size:30px; display:block; margin-bottom:4px}
+.file-drop b{font-size:13.5px;}
+.file-drop small{display:block; font-size:11px; color:var(--ink-faint); margin-top:4px; font-weight:600}
+.file-drop input{display:none}
+.preview-img{max-width:100%; border-radius:14px; box-shadow:var(--shadow-s); margin-top:10px; display:block}
+.ocr-status{font-size:12.5px; font-weight:800; color:#2c6b83; margin-top:12px; display:none}
+.ocr-status.show{display:block}
+.ocr-status .track{height:10px; border-radius:999px; background:#eef6fb; margin-top:6px; overflow:hidden}
+.ocr-status .track > i{display:block; height:100%; width:0; background:linear-gradient(90deg,#a8dff4,#ffb3d1); transition:width .3s ease}
+.cands{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px}
+.cand{
+  border:0; font-family:inherit; cursor:pointer; font-weight:800; font-size:16px; font-variant-numeric:tabular-nums;
+  padding:10px 16px; border-radius:16px; color:#8a3f61; min-height:48px;
+  background:linear-gradient(180deg,#fff,#ffeaf3); box-shadow:0 3px 0 #ffd0e3, 0 6px 14px rgba(255,160,200,.24), inset 0 1px 0 #fff;
+}
+.cand:active{transform:translateY(2px)}
+.cand small{display:block; font-size:9.5px; color:#b98aa2; font-weight:700}
+details.raw{margin-top:12px}
+details.raw summary{font-size:11.5px; font-weight:800; color:var(--ink-soft); cursor:pointer; min-height:36px; display:flex; align-items:center}
+details.raw pre{
+  white-space:pre-wrap; font-size:11px; background:#fff; border:1.5px solid #eef0f6; border-radius:12px;
+  padding:10px; max-height:160px; overflow:auto; color:#5c4b62; font-family:ui-monospace,Menlo,monospace;
+}
+.manual{display:flex; gap:8px; margin-top:12px}
+.manual input{
+  flex:1; font-family:inherit; font-size:18px; font-weight:800; font-variant-numeric:tabular-nums; text-align:right;
+  padding:10px 12px; border-radius:14px; border:2px solid #ddeff8; background:#fff;
+}
+.manual button{border:0; font-family:inherit; font-weight:800; font-size:13px; padding:10px 16px; border-radius:14px;
+  color:#fff; background:linear-gradient(180deg,#ffb0d0,#ff87b8); box-shadow:0 3px 0 #e2608f; cursor:pointer; min-height:46px}
+.err{font-size:12px; font-weight:700; color:#c0603a; background:#fff3ee; border-radius:12px; padding:9px 11px; margin-top:10px; display:none}
+.err.show{display:block}
+
+/* バックアップ */
+.bk{display:grid; gap:10px; margin-top:8px}
+.bk textarea{
+  width:100%; height:120px; font-size:11px; font-family:ui-monospace,Menlo,monospace; border-radius:14px;
+  border:1.5px solid #eef0f6; padding:10px; resize:vertical; color:#5c4b62; background:#fff;
+}
+
+/* トースト */
+#toast{
+  position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translate(-50%,20px);
+  background:linear-gradient(180deg,#fff,#fff4f9); color:#8a3f61; font-weight:800; font-size:12.5px;
+  padding:11px 18px; border-radius:999px; box-shadow:0 8px 24px rgba(180,120,160,.32), 0 0 0 2px #fff;
+  opacity:0; pointer-events:none; transition:all .25s ease; z-index:200; max-width:90vw; text-align:center;
+}
+#toast.show{opacity:1; transform:translate(-50%,0)}
+
+/* 紙吹雪 */
+.confetti{
+  position:fixed; top:-14px; z-index:180; pointer-events:none;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translate(0,-10px) rotate(0deg); opacity:1}
+  100%{transform:translate(var(--sway), 102vh) rotate(680deg); opacity:.15}
+}
+
+/* 飛ぶハート */
+.fx{position:absolute; pointer-events:none; font-size:18px; z-index:50; animation:fxUp .9s ease-out forwards}
+@keyframes fxUp{
+  0%{transform:translate(0,0) scale(.5) rotate(0); opacity:0}
+  22%{opacity:1; transform:translate(var(--dx),-10px) scale(1.15) rotate(var(--rot))}
+  100%{opacity:0; transform:translate(calc(var(--dx) * 1.6), -58px) scale(.75) rotate(calc(var(--rot) * -1))}
+}
+
+/* フッター注記 */
+.foot{
+  margin:18px 0 6px; padding:14px 16px; border-radius:22px; background:#ffffffaa;
+  border:1.5px dashed #ffd0e3; font-size:11px; color:var(--ink-soft); line-height:1.7; font-weight:600;
+}
+.foot b{color:#7a4b63}
+.foot a{color:#2c6b83; font-weight:800}
+.empty{padding:26px 12px; text-align:center; color:var(--ink-faint); font-weight:700; font-size:13px}
+@media(max-width:430px){
+  .wrap{padding:0 10px}
+  header{padding:16px 13px 15px; border-radius:26px}
+  h1{font-size:20px}
+  .intro{font-size:11.5px}
+  .card{padding:14px 12px 11px; border-radius:22px}
+  .emoji{width:50px; height:50px; font-size:27px; border-radius:17px}
+  .card-title h3{font-size:15px}
+  .card-head{gap:9px; padding-right:52px}
+  .ribbon-badge{min-width:58px; padding:6px 8px 8px; font-size:9.5px}
+  .numarea{padding:9px}
+  .numin{font-size:18px; padding:8px 10px}
+  .ocr-btn{min-height:40px; padding:8px; font-size:12px}
+  .status{min-height:44px; font-size:13px}
+  .picks .pick{font-size:11px; padding:3px 9px}
+  .source-note{font-size:9.5px}
+  .tab{font-size:12px}
+  .tab em{font-size:9.5px}
+  .btn{padding:10px 13px; font-size:12.5px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <button class="sound-btn" id="btnSound" data-muted="true" aria-label="音のオン・オフ" title="音のオン・オフ">🔇</button>
+  <svg class="ribbon-deco" viewBox="0 0 120 120" aria-hidden="true">
+    <g fill="none" stroke="#ffb3d1" stroke-width="4" opacity=".75">
+      <path d="M18 112 C18 74 42 56 60 40" stroke-linecap="round"/>
+      <path d="M60 40 C46 28 38 18 44 10 C52 2 60 14 60 26" fill="#ffe6f0"/>
+      <path d="M60 40 C74 28 82 18 76 10 C68 2 60 14 60 26" fill="#ffe6f0"/>
+    </g>
+    <circle cx="86" cy="66" r="3" fill="#a8dff4"/>
+    <circle cx="32" cy="58" r="2.4" fill="#ffd0e3"/>
+    <path d="M92 92 l2.2 5 5.4.5-4 3.7 1.1 5.3-4.7-2.9-4.7 2.9 1.1-5.3-4-3.7 5.4-.5z" fill="#ffe6a3"/>
+  </svg>
+  <span class="kicker">🎀 for なほ's BOX</span>
+  <h1>📋 ポケスリ役割チェック <span class="h1-sub">role check</span></h1>
+  <p class="intro">「この子いる？いらん？」を1タップで仕分け。🍎食材・🍒きのみ・✨スキルの役割ごとに、にとよんで出た1日の個数を入れると合格判定してくれるよ♡</p>
+  <div class="header-actions">
+    <a class="btn primary" href="https://nitoyon.github.io/pokesleep-tool/iv/index.ja.html" target="_blank" rel="noopener">🧮 にとよんで計算する</a>
+    <button class="btn aqua" id="btnBackup">💾 バックアップ</button>
+    <button class="btn aqua" id="btnHelp">❓ つかいかた</button>
+  </div>
+</header>
+
+<section class="progress-card" aria-label="進捗">
+  <div class="progress-top">
+    <b>🎀 確保済み <span class="cnt" id="cntDone">0</span> / <span id="cntTotal">32</span> 枠</b>
+    <span class="badge pink" id="cntPct">0%</span>
+  </div>
+  <div class="bar"><i id="barFill" style="width:0%"></i></div>
+  <div class="progress-sub">
+    <span>⬜ 未確保 <b id="cnt0">0</b></span>
+    <span>🔍 厳選中 <b id="cnt1">0</b></span>
+    <span>✅ 確保済み <b id="cnt2">0</b></span>
+  </div>
+  <div class="sec-bars">
+    <div class="sec-row"><span class="nm">🍎 食材</span><div class="sec-bar"><i id="secFoodBar"></i></div><b id="secFood">0/20</b></div>
+    <div class="sec-row"><span class="nm">🍒 きのみ</span><div class="sec-bar"><i id="secBerryBar"></i></div><b id="secBerry">0/6</b></div>
+    <div class="sec-row"><span class="nm">✨ スキル</span><div class="sec-bar"><i id="secSkillBar"></i></div><b id="secSkill">0/6</b></div>
+  </div>
+</section>
+
+<nav class="tabs" role="tablist" aria-label="役割タブ">
+  <button class="tab" role="tab" id="tab-food" data-tab="food" aria-selected="true">🍎 食材<em id="tabFoodCnt">0/20</em></button>
+  <button class="tab" role="tab" id="tab-berry" data-tab="berry" aria-selected="false">🍒 島きのみ<em id="tabBerryCnt">0/6</em></button>
+  <button class="tab" role="tab" id="tab-skill" data-tab="skill" aria-selected="false">✨ スキル<em id="tabSkillCnt">0/6</em></button>
+</nav>
+
+<div class="filters">
+  <button class="chip" data-filter="all" aria-pressed="true">すべて</button>
+  <button class="chip" data-filter="none" aria-pressed="false">⬜ 未確保のみ</button>
+  <button class="chip" data-filter="done" aria-pressed="false">✅ 確保済み</button>
+  <span class="spacer"></span>
+  <button class="chip" id="btnReset">🧹 ぜんぶリセット</button>
+</div>
+
+<main id="list" class="grid" aria-live="polite"></main>
+
+<footer class="foot">
+  <b>数字の出どころ</b>：目標は「上位料理（初期エナジー約8万以上）のうち、その食材をいちばん多く使うレシピ×3食」の個数。レシピ量はゲームエイト料理一覧（2026-11-18更新）、参考個数は豆腐メンタルの食材別ランキング（にとよんツールで試算・食材確率M／性格無補正・日中毎分タップ／睡眠中タップなし）より。<br>
+  同じ食材でも料理や週によって必要数は動くので、<b>目標は各カードのメモ欄から自分で変えられる</b>よ。数字は目安として使ってね。<br>
+  データはこの端末のブラウザにだけ保存される（サーバーには送らない）。機種変更の前に💾バックアップ。
+</footer>
+
+</div>
+
+<!-- ===== OCRモーダル ===== -->
+<div class="modal" id="ocrModal" role="dialog" aria-modal="true" aria-labelledby="ocrTitle">
+  <div class="sheet">
+    <button class="sheet-close" data-close="ocrModal" aria-label="閉じる">✕</button>
+    <h2 id="ocrTitle">📸 スクショから読み取る</h2>
+    <p class="cap" id="ocrTargetName">にとよんの画面をスクショして選んでね。数字だけ読み取って候補にするよ（画像は端末の外に出ないよ）</p>
+
+    <label class="file-drop" id="fileDrop">
+      <span class="big">🖼️</span>
+      <b>スクショをえらぶ</b>
+      <small>タップして写真を選ぶ／カメラでもOK</small>
+      <input type="file" id="fileInput" accept="image/*">
+    </label>
+
+    <img id="ocrPreview" class="preview-img" alt="読み取り中の画像" style="display:none">
+    <div class="ocr-status" id="ocrStatus">よみとりちゅう…<div class="track"><i id="ocrBar"></i></div></div>
+    <div class="err" id="ocrErr"></div>
+
+    <div class="cands" id="ocrCands"></div>
+
+    <details class="raw" id="rawWrap" style="display:none">
+      <summary>📄 読み取ったテキストを見る（タップで開く）</summary>
+      <pre id="ocrRaw"></pre>
+    </details>
+
+    <div class="manual">
+      <input type="number" inputmode="decimal" step="0.1" id="manualVal" placeholder="自分で入力">
+      <button id="manualSet">この数字でOK</button>
+    </div>
+    <p class="cap" style="margin-top:10px">読み取れないときは、ふつうに入力してもらえれば大丈夫🙆‍♀️</p>
+  </div>
+</div>
+
+<!-- ===== バックアップモーダル ===== -->
+<div class="modal" id="bkModal" role="dialog" aria-modal="true" aria-labelledby="bkTitle">
+  <div class="sheet">
+    <button class="sheet-close" data-close="bkModal" aria-label="閉じる">✕</button>
+    <h2 id="bkTitle">💾 バックアップ</h2>
+    <p class="cap">この端末のブラウザに保存されている記録を、ファイルに残したり、べつの端末で読み込んだりできるよ。</p>
+    <div class="bk">
+      <button class="btn primary" id="btnExport">📤 記録を書き出す（ファイル保存）</button>
+      <button class="btn aqua" id="btnImportPick">📥 書き出したファイルを読み込む</button>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+      <p class="cap" style="margin:2px 0 0">読み込むと、いまの記録はファイルの内容で置きかわるよ。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ヘルプモーダル ===== -->
+<div class="modal" id="helpModal" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="sheet">
+    <button class="sheet-close" data-close="helpModal" aria-label="閉じる">✕</button>
+    <h2 id="helpTitle">❓ つかいかた</h2>
+    <p class="cap" style="margin-bottom:10px">むずかしいことなし！3ステップで仕分けできるよ🎀</p>
+    <div class="foot" style="margin:0 0 10px; border-style:solid; border-color:#ffe6f0">
+      <b>1. 状態をポン</b><br>
+      カードのボタンを押すたびに ⬜未確保 → 🔍厳選中 → ✅確保済み と切りかわるよ。<br><br>
+      <b>2. 数字を入れる（食材だけ）</b><br>
+      にとよんで計算した「1日の個数」を入れると、3食ぶんに足りてるか自動チェック。📸ボタンでスクショから読み取ることもできる。<br><br>
+      <b>3. メモを書く</b><br>
+      「Lv50で銀種予定」「手持ちはゲンガー」など、自分用のメモを残せるよ。
+    </div>
+    <p class="cap" style="margin:0">保存は自動。ホーム画面に追加しておくと開きやすいよ🍓</p>
+  </div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ===================== データ ===================== */
+/* 目標 = 上位料理（初期エナジー約8万以上）でその食材をいちばん多く使うレシピの必要数 × 3食
+   レシピ必要数: ゲームエイト 料理レシピ一覧（2026-11-18更新）
+   参考個数: 豆腐メンタルポケスリ 食材別ランキング（にとよんツール試算 / 食材確率M・性格無補正・日中毎分タップ・睡眠中タップなし） */
+const FOOD = [
+  { id:'herb', emoji:'🌶️', name:'げきからハーブ', target:90,  recipe:'じならしワカモレチップス（30個）×3', recipe2:'とびはねるカレーうどん（22個）×3 = 66',
+    picks:['カイリュー','ゲンガー'], ref:'カイリュー Lv30 83.1 / Lv60 111.8', ref2:'ゲンガー Lv30 61.0 / Lv60 82.9' },
+  { id:'corn', emoji:'🌽', name:'ワカクサコーン', target:84, recipe:'みつあつめチョコワッフル（28個）×3', recipe2:'ごろごろねっとうサラダ（18個）×3 = 54',
+    picks:['キテルグマ','カイリュー'], ref:'キテルグマ Lv30 66.2 / Lv60 89.4', ref2:'カイリュー Lv30 48.6 / Lv60 88.6（AB構成）' },
+  { id:'ginger', emoji:'🫚', name:'あったかジンジャー', target:117, recipe:'とびはねるカレーうどん（39個）×3', recipe2:'くさむすびサラダラップ（36個）×3 = 108',
+    picks:['バンギラス','リザードン'], ref:'バンギラス Lv30 80.6 / Lv60 108.5', ref2:'リザードン Lv30 44.1 / Lv60 80.9' },
+  { id:'milk', emoji:'🥛', name:'モーモーミルク', target:123, recipe:'しんりょくアボカドグラタン（41個）×3', recipe2:'ドオーのエクレア（26個）×3 = 78',
+    picks:['カメックス'], ref:'カメックス Lv30 79.5 / Lv60 107.1', ref2:'マスカーニャ Lv30 50.9 / Lv60 85.5' },
+  { id:'cacao', emoji:'🍫', name:'リラックスカカオ', target:90, recipe:'ドオーのエクレア（30個）×3', recipe2:'みつあつめチョコワッフル（21個）×3 = 63',
+    picks:['アブソル','ドオー','カメックスABB'], ref:'ドオー Lv30 51.3 / Lv60 68.7', ref2:'アブソル Lv30 48.5 / Lv60 65.8 ・ カメックス Lv30 35.9 / Lv60 64.1' },
+  { id:'honey', emoji:'🍯', name:'あまいミツ', target:114, recipe:'みつあつめチョコワッフル（38個）×3', recipe2:'ドキドキこわいかおパンケーキ（32個）×3 = 96',
+    picks:['フシギバナ','アブリボン'], ref:'フシギバナ Lv30 77.1 / Lv60 103.9', ref2:'アブリボン Lv30 69.3 / Lv60 93.3' },
+  { id:'tomato', emoji:'🍅', name:'あんみんトマト', target:99, recipe:'くさむすびサラダラップ（33個）×3', recipe2:'ドキドキこわいかおパンケーキ（29個）×3 = 87',
+    picks:['ユキノオー','レントラー','ウツボット'], ref:'レントラー Lv30 71.4 / Lv60 102.1', ref2:'ユキノオー Lv30 69.8 / Lv60 99.4 ・ ウツボット Lv30 67.9 / Lv60 96.8' },
+  { id:'potato', emoji:'🥔', name:'ほっこりポテト', target:90, recipe:'ごろごろねっとうサラダ（30個）×3', recipe2:'まけんきコーヒーサラダ（22個）×3 = 66',
+    picks:['ハルクジラ','マスカーニャ'], ref:'ハルクジラ Lv30 63.8 / Lv60 85.6', ref2:'マスカーニャ Lv30 60.8 / Lv60 82.0' },
+  { id:'meat', emoji:'🥩', name:'マメミート', target:84, recipe:'まけんきコーヒーサラダ（28個）×3', recipe2:'いあいぎりすき焼きカレー（26個）×3 = 78',
+    picks:['ボスゴドラ','リザードン'], ref:'ボスゴドラ Lv30 78.5 / Lv60 105.3', ref2:'リザードン Lv30 75.6 / Lv60 102.2' },
+  { id:'egg', emoji:'🥚', name:'とくせんエッグ', target:105, recipe:'りんごさんヨーグルトサラダ（35個）×3', recipe2:'おいしいシッポロールケーキ（33個）×3 = 99',
+    picks:['ハピナス','デリバード'], ref:'ハピナス Lv30 67.1 / Lv60 89.4', ref2:'デリバード Lv30 57.6 / Lv60 78.9' },
+  { id:'soy', emoji:'🫘', name:'ワカクサ大豆', target:84, recipe:'めざめるパワーシチュー（28個）×3', recipe2:'ワカモレチップス（22個）×3 = 66',
+    picks:['ウェーニバル','ゴローニャ'], ref:'ゴローニャ Lv30 74.0 / Lv60 99.4', ref2:'ウェーニバル Lv30 73.4 / Lv60 98.9' },
+  { id:'oil', emoji:'🫒', name:'ピュアなオイル', target:96, recipe:'しんりょくアボカドグラタン（32個）×3', recipe2:'みつあつめチョコワッフル（28個）×3 = 84',
+    picks:['ドクロッグ','レントラーABB'], ref:'ドクロッグ Lv30 53.5 / Lv60 72.5', ref2:'レントラー Lv30 40.4 / Lv60 74.1（オイルABB）' },
+  { id:'apple', emoji:'🍎', name:'とくせんリンゴ', target:105, recipe:'スパークスパイスコーラ（35個）×3', recipe2:'りんごさんヨーグルトサラダ（28個）×3 = 84',
+    picks:['ラウドボーン'], ref:'ラウドボーン Lv30 81.0 / Lv60 109.2', ref2:'アブソル Lv30 52.7 / Lv60 89.2' },
+  { id:'mushroom', emoji:'🍄', name:'あじわいキノコ', target:93, recipe:'とびはねるカレーうどん（31個）×3', recipe2:'ごろごろねっとうサラダ（27個）×3 = 81',
+    picks:['モロバレル','ミカルゲ','ヌオー'], ref:'ミカルゲ Lv30 50.2 / Lv60 67.0', ref2:'モロバレル Lv30 47.0 / Lv60 63.7 ・ ヌオー Lv30 46.2 / Lv60 62.3' },
+  { id:'leek', emoji:'🧅', name:'ふといながねぎ', target:81, recipe:'いあいぎりすき焼きカレー（27個）×3', recipe2:'スパークスパイスコーラ（20個）×3 = 60',
+    picks:['カモネギ','ウェーニバルABB'], ref:'カモネギ Lv30 41.9 / Lv60 57.2', ref2:'ウェーニバル Lv30 22.9 / Lv60 45.9' },
+  { id:'coffee', emoji:'☕', name:'めざましコーヒー', target:84, recipe:'まけんきコーヒーサラダ（28個）×3', recipe2:'ドオーのエクレア（24個）×3 = 72',
+    picks:['クワガノン','ボスゴドラABB'], ref:'クワガノン Lv30 59.1 / Lv60 79.4', ref2:'ボスゴドラ Lv30 35.6 / Lv60 63.3' },
+  { id:'pumpkin', emoji:'🎃', name:'ずっしりカボチャ', target:60, recipe:'ごろごろねっとうサラダ（20個）×3', recipe2:'ドキドキこわいかおパンケーキ（18個）×3 = 54',
+    picks:['パンプジン'], ref:'パンプジン（ギガだま）Lv30 35.8 / Lv60 48.4', ref2:'パンプジン（こだま）Lv30 32.3 / Lv60 44.4' },
+  { id:'avocado', emoji:'🥑', name:'つやつやアボカド', target:84, recipe:'じならしワカモレチップス（28個）×3', recipe2:'くさむすびサラダラップ（22個）×3 = 66',
+    picks:['フライゴン','ジジーロン'], ref:'フライゴン Lv30 53.5 / Lv60 72.1', ref2:'ジジーロン Lv30 31.7 / Lv60 50.1' },
+  { id:'nuts', emoji:'🥜', name:'ひとくちナッツ', target:90, recipe:'くさむすびサラダラップ（30個）×3', recipe2:'おいしいシッポロールケーキ（26個）×3 = 78', isNew:true,
+    picks:['エルフーン'], ref:'エルフーン Lv60 79.3（食材確率M）', ref2:'2026-11-16追加の新食材。今はエルフーン系統だけ' },
+  { id:'tail', emoji:'🍖', name:'おいしいシッポ', target:30, recipe:'ヤドンテールのペッパーサラダ（10個）×3', recipe2:'おいしいシッポロールケーキ（10個）×3 = 30',
+    picks:['専門なし','メタモンorヤドラン 1匹'], ref:'ヤドラン Lv30 7.2 / Lv60 15.0', ref2:'Lv30解放用に1匹だけ確保しておく枠' }
+];
+
+const BERRY = [
+  { id:'b_cyan',   emoji:'🏖️', name:'シアンの砂浜',   picks:['デカヌチャン','オーダイル','ドードリオ'] },
+  { id:'b_tofu',   emoji:'🌋', name:'トープ洞窟',     picks:['バクフーン','ラグラージ','ガチゴラス'] },
+  { id:'b_snow',   emoji:'❄️', name:'ウノハナ雪原',   picks:['トドゼルガ','アローラキュウコン','マニューラ'] },
+  { id:'b_lapis',  emoji:'💎', name:'ラピスラズリ湖畔', picks:['メガニウム','バシャーモ'] },
+  { id:'b_gold',   emoji:'⚡', name:'ゴールド旧発電所', picks:['ハガネール','ライチュウ','エンペルト'] },
+  { id:'b_amber',  emoji:'🪨', name:'アンバー渓谷',   picks:['ボーマンダ','バタフリー'] }
+];
+
+const SKILL = [
+  { id:'s_heal',  emoji:'💚', name:'ヒーラー',     picks:['サーナイト','ドダイトス','パーモット','ツボツボ','プクリン'] },
+  { id:'s_pot',   emoji:'🍲', name:'鍋拡張',       picks:['ジバコイル','グレイシア'], note:'兼任OK：ボーマンダ・マスカーニャ・レントラー' },
+  { id:'s_cook',  emoji:'🌟', name:'料理チャンス', picks:['デデンネ','ラグラージ','ジジーロン'] },
+  { id:'s_ener',  emoji:'⚡', name:'エナチャM',    picks:['デンリュウ','エーフィ'] },
+  { id:'s_burst', emoji:'💥', name:'きのみバースト', picks:['ジュカイン'] },
+  { id:'s_dream', emoji:'✨', name:'ゆめのかけら', picks:['ムシャーナ','マルノーム','ルカリオ'] }
+];
+
+/* ===================== 状態 ===================== */
+const KEY = 'pokesleep-role-v1';
+const ALL = [
+  ...FOOD.map(x=>({...x, kind:'food'})),
+  ...BERRY.map(x=>({...x, kind:'berry'})),
+  ...SKILL.map(x=>({...x, kind:'skill'}))
+];
+let state = { tab:'food', filter:'all', items:{} };
+ALL.forEach(x=>{ state.items[x.id] = { st:0, val:'', memo:'', poke:'', target:null } });
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY);
+    if(!raw) return;
+    const p = JSON.parse(raw);
+    if(p && typeof p === 'object'){
+      if(p.tab) state.tab = p.tab;
+      if(p.filter) state.filter = p.filter;
+      if(p.items && typeof p.items === 'object'){
+        ALL.forEach(x=>{
+          const v = p.items[x.id];
+          if(v && typeof v === 'object'){
+            state.items[x.id] = {
+              st: [0,1,2].includes(v.st) ? v.st : 0,
+              val: typeof v.val === 'string' ? v.val : (typeof v.val === 'number' ? String(v.val) : ''),
+              memo: typeof v.memo === 'string' ? v.memo : '',
+              poke: typeof v.poke === 'string' ? v.poke : '',
+              target: (typeof v.target === 'number' && v.target > 0) ? v.target : null
+            };
+          }
+        });
+      }
+    }
+  }catch(e){ console.warn('load failed', e); }
+}
+let saveTimer = null;
+function save(now){
+  clearTimeout(saveTimer);
+  const doSave = ()=>{
+    try{ localStorage.setItem(KEY, JSON.stringify(state)); }
+    catch(e){ toast('保存できなかった…（容量不足かも）'); }
+  };
+  if(now) doSave(); else saveTimer = setTimeout(doSave, 250);
+}
+
+/* ===================== ユーティリティ ===================== */
+const $ = (s, el=document)=>el.querySelector(s);
+const $$ = (s, el=document)=>[...el.querySelectorAll(s)];
+const ST_LABEL = ['⬜ 未確保','🔍 厳選中','✅ 確保済み'];
+function targetOf(item){ const t = state.items[item.id].target; return (t && t>0) ? t : item.target; }
+function num(v){ const n = parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isFinite(n) ? n : null; }
+
+function toast(msg){
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+function burst(el){
+  const chars = ['💗','⭐','✨','🎀','💖','🌟'];
+  const r = el.getBoundingClientRect();
+  for(let i=0;i<7;i++){
+    const s = document.createElement('span');
+    s.className = 'fx';
+    s.textContent = chars[Math.floor(Math.random()*chars.length)];
+    s.style.left = (r.left + r.width/2 - 9 + (Math.random()*40-20)) + 'px';
+    s.style.top  = (r.top + r.height/2 - 9) + 'px';
+    s.style.position = 'fixed';
+    s.style.setProperty('--dx', (Math.random()*56-28).toFixed(0)+'px');
+    s.style.setProperty('--rot', (Math.random()*70-35).toFixed(0)+'deg');
+    s.style.animationDelay = (i*28)+'ms';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(), 1100);
+  }
+}
+
+/* ===================== 描画 ===================== */
+function judgeHTML(item){
+  if(item.kind !== 'food') return '';
+  const t = targetOf(item);
+  const n = num(state.items[item.id].val);
+  let cls='', label='', pct='';
+  let ratio = 0;
+  if(n !== null && n > 0){
+    ratio = n / t;
+    if(ratio >= 1){ cls='clear'; label='🎉 3食クリア！'; }
+    else if(ratio >= 2/3){ cls='ok'; label='✅ 合格（2食ライン）'; }
+    else { cls='low'; label='⚠️ あと ' + (Math.round((t-n)*10)/10) + ' 個'; }
+    pct = Math.round(ratio*100) + '%';
+  }
+  let judge = '<div class="judge ' + cls + '"><span class="lbltxt">' + (label || '数字を入れると判定するよ') + '</span>' + (pct?'<span class="pct">'+pct+'</span>':'') + '</div>';
+  const w = Math.min(100, Math.round(ratio*100));
+  const barCls = cls === 'clear' ? 'clear' : (cls === 'ok' ? 'ok' : '');
+  const bar = '<div class="mini-bar"><i class="' + barCls + '" style="width:' + w + '%"></i></div>';
+  return '<div class="numarea">' +
+      '<div class="numrow">' +
+        '<label for="n_' + item.id + '">1日の個数</label>' +
+        '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="number" inputmode="decimal" step="0.1" min="0" placeholder="0.0" value="' + (state.items[item.id].val || '') + '">' +
+        '<span class="unit">個</span>' +
+      '</div>' +
+      '<div class="target-line"><span>目標（3食）</span><b>' + t + ' 個</b></div>' +
+      judge + bar +
+    '</div>' +
+    '<button class="ocr-btn" data-ocr="' + item.id + '">📸 スクショから読み取る</button>';
+}
+
+function cardHTML(item){
+  const s = state.items[item.id];
+  const st = s.st;
+  const cardCls = st===2 ? 's-done' : (st===1 ? 's-search' : '');
+  let badges = '';
+  if(item.kind === 'berry') badges += '<span class="badge">きのみS 必須</span>';
+  if(item.kind === 'skill') badges += '<span class="badge pink">スキル枠</span>';
+  if(item.isNew) badges += '<span class="badge warn">NEW</span>';
+
+  const picks = item.picks.map((p,i)=>{
+    const best = (i===0 && !/専門なし|兼任|メタモンor/.test(p));
+    let extra = '';
+    if(item.kind === 'food' && i===0 && item.ref) extra = '<small style="display:block;font-weight:700;font-size:9.5px;color:#b98aa2">' + item.ref + '</small>';
+    return '<span class="pick ' + (best?'best':'') + '">' + p + extra + '</span>';
+  }).join('');
+
+  const t = targetOf(item);
+  const memo = s.memo || '', poke = s.poke || '';
+
+  return '<article class="card ' + cardCls + '" data-id="' + item.id + '">' +
+    '<span class="edge"></span>' + ribbonHTML(st) +
+    '<div class="card-head">' +
+      '<div class="emoji">' + item.emoji + '</div>' +
+      '<div class="card-title"><h3>' + item.name + badges + '</h3>' +
+        '<div class="sub">' + (item.kind==='food' ? '目標 ' + t + ' 個/日' : (item.kind==='berry' ? '島のきのみ枠' : 'スキル役')) + '</div>' +
+      '</div>' +
+    '</div>' +
+    '<button class="status st-' + st + '" data-st="' + item.id + '" aria-label="状態を切りかえる（いま ' + ST_LABEL[st] + '）">' +
+      ST_LABEL[st] + '<span class="hint">タップで切替</span>' +
+    '</button>' +
+    judgeHTML(item) +
+    '<div class="picks"><span class="lbl">🎯 候補</span>' + picks + '</div>' +
+    (item.note ? '<div class="source-note">💡 ' + item.note + '</div>' : '') +
+    (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>ほか ' + item.recipe2 : '') + (item.ref2 ? '<br>参考 ' + item.ref2 : '') + '</div>' : '') +
+    '<details class="memo"><summary><span class="arw">▶</span>📝 メモ・手持ち・目標の変更</summary>' +
+      '<div class="memo-body">' +
+        '<div class="row"><span>手持ち</span><input data-field="poke" data-id="' + item.id + '" placeholder="例：ゲンガー（たまご）" value="' + escapeAttr(poke) + '"></div>' +
+        '<div class="row"><span>メモ</span><input data-field="memo" data-id="' + item.id + '" placeholder="例：Lv50で銀種予定" value="' + escapeAttr(memo) + '"></div>' +
+        (item.kind==='food' ?
+          '<div class="row"><span>目標</span><div class="tgt-edit"><input type="number" step="1" min="1" data-target="' + item.id + '" placeholder="' + item.target + '" value="' + (state.items[item.id].target ?? '') + '"><button data-targetreset="' + item.id + '">初期値に戻す</button></div></div>'
+          : '') +
+      '</div>' +
+    '</details>' +
+  '</article>';
+}
+
+function escapeAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function ribbonHTML(st){
+  if(st === 2) return '<div class="ribbon-badge st-2"><span class="ic">✅</span>確保</div>';
+  if(st === 1) return '<div class="ribbon-badge st-1"><span class="ic">🔍</span>厳選中</div>';
+  return '<div class="ribbon-badge"><span class="ic">⬜</span>未確保</div>';
+}
+
+function filtered(){
+  const list = ALL.filter(x=> x.kind === state.tab);
+  if(state.filter === 'none') return list.filter(x=> state.items[x.id].st === 0);
+  if(state.filter === 'done') return list.filter(x=> state.items[x.id].st === 2);
+  return list;
+}
+
+function renderList(){
+  const list = filtered();
+  const box = $('#list');
+  if(!list.length){
+    box.innerHTML = '<div class="empty" style="grid-column:1/-1">この条件の枠はないよ🎀<br><button class="chip" style="margin-top:10px" data-filter-set="all">すべて表示にもどす</button></div>';
+  } else {
+    box.innerHTML = list.map(cardHTML).join('');
+  }
+  $$('.tab').forEach(b=> b.setAttribute('aria-selected', String(b.dataset.tab === state.tab)));
+  $$('.chip[data-filter]').forEach(b=> b.setAttribute('aria-pressed', String(b.dataset.filter === state.filter)));
+}
+
+function renderProgress(){
+  const total = ALL.length;
+  let done=0, s1=0;
+  ALL.forEach(x=>{ const st = state.items[x.id].st; if(st===2) done++; if(st===1) s1++; });
+  $('#cntDone').textContent = done;
+  $('#cntTotal').textContent = total;
+  $('#cnt0').textContent = total - done - s1;
+  $('#cnt1').textContent = s1;
+  $('#cnt2').textContent = done;
+  $('#cntPct').textContent = Math.round(done/total*100) + '%';
+  $('#barFill').style.width = (done/total*100) + '%';
+  const tabCount = (k)=>{ const arr = ALL.filter(x=>x.kind===k); const d = arr.filter(x=>state.items[x.id].st===2).length; return d + '/' + arr.length; };
+  $('#tabFoodCnt').textContent = tabCount('food');
+  $('#tabBerryCnt').textContent = tabCount('berry');
+  $('#tabSkillCnt').textContent = tabCount('skill');
+
+  const secSet = (k, barId, txtId, emoji)=>{
+    const arr = ALL.filter(x=>x.kind===k);
+    const d = arr.filter(x=>state.items[x.id].st===2).length;
+    $('#'+barId).style.width = (d/arr.length*100) + '%';
+    $('#'+txtId).textContent = d + '/' + arr.length;
+  };
+  secSet('food','secFoodBar','secFood');
+  secSet('berry','secBerryBar','secBerry');
+  secSet('skill','secSkillBar','secSkill');
+}
+
+function render(){ renderList(); renderProgress(); }
+
+/* ===================== イベント ===================== */
+document.addEventListener('click', (e)=>{
+  const t = e.target.closest('[data-st],[data-tab],[data-filter],[data-filter-set],[data-ocr],[data-targetreset]');
+  if(!t) return;
+
+  if(t.dataset.tab){
+    state.tab = t.dataset.tab; save();
+    render(); window.scrollTo({top:0, behavior:'smooth'});
+    return;
+  }
+  if(t.dataset.filter){
+    state.filter = t.dataset.filter; save(); render(); return;
+  }
+  if(t.dataset.filterSet){
+    state.filter = t.dataset.filterSet; save(); render(); return;
+  }
+  if(t.dataset.st){
+    const id = t.dataset.st; const it = state.items[id];
+    it.st = (it.st + 1) % 3;
+    save();
+    const card = t.closest('.card');
+    card.classList.remove('pop'); void card.offsetWidth; card.classList.add('pop');
+    t.className = 'status st-' + it.st;
+    t.innerHTML = ST_LABEL[it.st] + '<span class="hint">タップで切替</span>';
+    const rb = card.querySelector('.ribbon-badge');
+    if(rb){ const tmp = document.createElement('div'); tmp.innerHTML = ribbonHTML(it.st); rb.replaceWith(tmp.firstElementChild); }
+    card.classList.toggle('s-done', it.st===2);
+    card.classList.toggle('s-search', it.st===1);
+    playPop();
+    if(it.st === 2){ burst(t); }
+    // フィルタで表示から外れる場合だけ描き直し、それ以外は進捗だけ更新
+    if(state.filter !== 'all') render(); else renderProgress();
+    checkMilestones();
+    return;
+  }
+  if(t.dataset.targetReset){
+    const id = t.dataset.targetReset;
+    state.items[id].target = null; save(); render(); toast('目標を初期値にもどしたよ'); return;
+  }
+  if(t.dataset.ocr){
+    openOCR(t.dataset.ocr); return;
+  }
+});
+
+document.addEventListener('input', (e)=>{
+  const el = e.target;
+  if(el.dataset.num){
+    const id = el.dataset.num;
+    state.items[id].val = el.value;
+    save();
+    updateCardJudge(id);
+    return;
+  }
+  if(el.dataset.field){
+    const id = el.dataset.id;
+    state.items[id][el.dataset.field] = el.value;
+    save(); return;
+  }
+  if(el.dataset.target){
+    const id = el.dataset.target;
+    const v = parseFloat(el.value);
+    state.items[id].target = (isFinite(v) && v > 0) ? v : null;
+    save();
+    const card = el.closest('.card');
+    if(card) card.querySelector('.sub').textContent = '目標 ' + targetOf(ALL.find(x=>x.id===id)) + ' 個/日';
+    updateCardJudge(id);
+    return;
+  }
+});
+
+function updateCardJudge(id){
+  const item = ALL.find(x=>x.id===id); if(!item || item.kind!=='food') return;
+  const card = document.querySelector('.card[data-id="' + id + '"]'); if(!card) return;
+  const numarea = card.querySelector('.numarea'); if(!numarea) return;
+  const fresh = document.createElement('div');
+  fresh.innerHTML = judgeHTML(item);
+  const newArea = fresh.querySelector('.numarea');
+  const keepFocus = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.num === id;
+  const selStart = keepFocus ? document.activeElement.selectionStart : null;
+  numarea.replaceWith(newArea);
+  if(keepFocus){
+    const inp = newArea.querySelector('input');
+    inp.focus();
+    try{ inp.setSelectionRange(selStart, selStart); }catch(_){}
+  }
+  // ラインを超えた瞬間だけお祝い（ドパ）
+  const t = targetOf(item); const n = num(state.items[id].val);
+  const prev = card.dataset.prevRatio === undefined ? null : parseFloat(card.dataset.prevRatio);
+  const ratio = (n !== null && n > 0) ? n / t : 0;
+  if(n !== null && n > 0){
+    if(ratio >= 1 && (prev === null || prev < 1) && !card.dataset.celebrated){
+      card.dataset.celebrated = '1';
+      burst(newArea); burst(newArea);
+      confetti(44);
+      playFanfare();
+      newArea.classList.add('pop');
+      toast('🎉 3食クリア！ この子は頼れる子だね💖');
+    } else if(ratio >= 2/3 && ratio < 1 && (prev === null || prev < 2/3) && !card.dataset.celebratedOk){
+      card.dataset.celebratedOk = '1';
+      burst(newArea);
+      playChime();
+    }
+  }
+  if(n !== null && ratio < 1) delete card.dataset.celebrated;
+  if(n !== null && ratio < 2/3) delete card.dataset.celebratedOk;
+  card.dataset.prevRatio = String(ratio);
+}
+
+/* ===================== タブ・フィルタ・その他ボタン ===================== */
+$('#btnHelp').addEventListener('click', ()=> openModal('helpModal'));
+$('#btnBackup').addEventListener('click', ()=> openModal('bkModal'));
+$('#btnReset').addEventListener('click', ()=>{
+  if(!confirm('ぜんぶの記録（状態・数字・メモ）をリセットする？')) return;
+  ALL.forEach(x=>{ state.items[x.id] = { st:0, val:'', memo:'', poke:'', target:null }; });
+  save(true); render(); toast('リセットしたよ🎀');
+});
+function openModal(id){ $('#'+id).classList.add('open'); document.body.style.overflow='hidden'; }
+function closeModal(id){ $('#'+id).classList.remove('open'); document.body.style.overflow=''; }
+$$('[data-close]').forEach(b=> b.addEventListener('click', ()=> closeModal(b.dataset.close)));
+$$('.modal').forEach(m=> m.addEventListener('click', (e)=>{ if(e.target === m) closeModal(m.id); }));
+
+/* バックアップ */
+$('#btnExport').addEventListener('click', ()=>{
+  const data = { app:'pokesleep-role', version:1, savedAt:new Date().toISOString(), state };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  const d = new Date();
+  const stamp = d.getFullYear() + ('0'+(d.getMonth()+1)).slice(-2) + ('0'+d.getDate()).slice(-2);
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ポケスリ役割チェック-' + stamp + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+  toast('書き出したよ💾');
+});
+$('#btnImportPick').addEventListener('click', ()=> $('#importFile').click());
+$('#importFile').addEventListener('change', async (e)=>{
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    const txt = await f.text();
+    const p = JSON.parse(txt);
+    const src = p && p.state ? p.state : p;
+    if(!src || !src.items) throw new Error('format');
+    if(!confirm('この端末の記録を、ファイルの内容で置きかえる？')) return;
+    ALL.forEach(x=>{
+      const v = src.items[x.id];
+      if(v && typeof v === 'object'){
+        state.items[x.id] = {
+          st:[0,1,2].includes(v.st)?v.st:0,
+          val: typeof v.val==='string'?v.val:'',
+          memo: typeof v.memo==='string'?v.memo:'',
+          poke: typeof v.poke==='string'?v.poke:'',
+          target: (typeof v.target==='number' && v.target>0)?v.target:null
+        };
+      }
+    });
+    save(true); render(); closeModal('bkModal'); toast('読み込んだよ🎀');
+  }catch(err){
+    toast('このファイルは読み込めなかった…');
+  }finally{ e.target.value=''; }
+});
+
+/* ===================== OCR ===================== */
+let ocrItem = null;
+
+function openOCR(id){
+  ocrItem = id;
+  const item = ALL.find(x=>x.id===id);
+  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。数字だけ拾って候補にするよ（画像は端末の外に出ないよ）';
+  $('#ocrCands').innerHTML = '';
+  $('#ocrRaw').textContent = '';
+  $('#rawWrap').style.display = 'none';
+  $('#ocrErr').classList.remove('show');
+  $('#ocrPreview').style.display = 'none';
+  $('#ocrStatus').classList.remove('show');
+  $('#manualVal').value = state.items[id].val || '';
+  openModal('ocrModal');
+}
+
+$('#fileInput').addEventListener('change', async (e)=>{
+  const f = e.target.files && e.target.files[0];
+  if(f) await runOCR(f);
+});
+
+$('#manualSet').addEventListener('click', ()=>{
+  const v = $('#manualVal').value;
+  if(!ocrItem) return;
+  state.items[ocrItem].val = v; save(true); render(); closeModal('ocrModal');
+  toast('数字を入れたよ🎀');
+});
+
+async function runOCR(file){
+  const errBox = $('#ocrErr'), status = $('#ocrStatus'), bar = $('#ocrBar');
+  errBox.classList.remove('show');
+  status.classList.add('show');
+  bar.style.width = '6%';
+  status.childNodes[0].nodeValue = 'よみとりちゅう…';
+
+  // プレビュー
+  const img = $('#ocrPreview');
+  const url = URL.createObjectURL(file);
+  img.src = url; img.style.display = 'block';
+  img.onload = ()=> setTimeout(()=>URL.revokeObjectURL(url), 20000);
+
+  try{
+    // 前処理（縮小＋グレースケール＋コントラスト）
+    const processed = await preprocess(file).catch(()=>file);
+
+    await loadTesseractLib();
+    bar.style.width = '22%';
+    status.childNodes[0].nodeValue = '読み取りエンジンを準備中…';
+
+    const worker = await Tesseract.createWorker('eng', 1, {
+      logger: (m)=>{
+        if(m.status === 'recognizing text'){
+          bar.style.width = (22 + Math.round((m.progress||0)*70)) + '%';
+          status.childNodes[0].nodeValue = 'よみとりちゅう… ' + Math.round((m.progress||0)*100) + '%';
+        } else if(m.status && m.progress){
+          status.childNodes[0].nodeValue = '準備中… ' + m.status;
+        }
+      }
+    });
+    const { data } = await worker.recognize(processed);
+    await worker.terminate();
+
+    bar.style.width = '100%';
+    status.childNodes[0].nodeValue = 'よみとれたよ！あてはまる数字をタップしてね♡';
+    showCandidates(data.text || '');
+  }catch(err){
+    console.warn(err);
+    status.classList.remove('show');
+    errBox.textContent = '読み取りできなかった😢 電波が弱いかも。ふつうに入力してもらえれば大丈夫！';
+    errBox.classList.add('show');
+  }
+}
+
+function preprocess(file){
+  return new Promise((resolve, reject)=>{
+    const im = new Image();
+    const u = URL.createObjectURL(file);
+    im.onload = ()=>{
+      try{
+        const maxW = 1300;
+        const scale = Math.min(1, maxW / im.width);
+        const w = Math.round(im.width * scale), h = Math.round(im.height * scale);
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        const ctx = c.getContext('2d');
+        ctx.drawImage(im, 0, 0, w, h);
+        const d = ctx.getImageData(0,0,w,h);
+        const px = d.data;
+        for(let i=0;i<px.length;i+=4){
+          const g = 0.299*px[i] + 0.587*px[i+1] + 0.114*px[i+2];
+          const v = Math.max(0, Math.min(255, (g - 128) * 1.45 + 128));
+          px[i]=px[i+1]=px[i+2]=v;
+        }
+        ctx.putImageData(d,0,0);
+        URL.revokeObjectURL(u);
+        c.toBlob(b=> b ? resolve(b) : reject(new Error('blob')), 'image/png');
+      }catch(e){ URL.revokeObjectURL(u); reject(e); }
+    };
+    im.onerror = ()=>{ URL.revokeObjectURL(u); reject(new Error('img')); };
+    im.src = u;
+  });
+}
+
+function loadTesseractLib(){
+  if(window.Tesseract) return Promise.resolve();
+  return new Promise((resolve, reject)=>{
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+    s.crossOrigin = 'anonymous';
+    s.onload = ()=> resolve();
+    s.onerror = ()=> reject(new Error('cdn'));
+    document.head.appendChild(s);
+    setTimeout(()=>{ if(!window.Tesseract) reject(new Error('timeout')); }, 20000);
+  });
+}
+
+/* 数字候補の抽出：％・Lv・時間・大きなエナジー値を除外 */
+function extractNumbers(text){
+  const out = [];
+  const seen = new Set();
+  const re = /\d{1,3}(?:[.,]\d{1,3})*\.?\d*/g;
+  let m;
+  while((m = re.exec(text)) !== null){
+    const raw = m[0];
+    const before = text.slice(Math.max(0, m.index-4), m.index).toLowerCase();
+    const after = text.slice(m.index + raw.length, m.index + raw.length + 3);
+    if(/lv\.?$|lv$|level$|レベル$/.test(before)) continue;
+    if(/^\s*(%|％)/.test(after)) continue;
+    if(/^\s*(時間|じかん|エナジ|kcal)/.test(after)) continue;
+    const cleaned = raw.replace(/,/g, '');
+    const v = parseFloat(cleaned);
+    if(!isFinite(v)) continue;
+    // 1日個数はふつう 1〜200。エナジー(数千)やパーセント(100超)を除く
+    if(v <= 0 || v > 300) continue;
+    if(/^0\d/.test(cleaned)) continue;
+    const key = String(v);
+    if(seen.has(key)) continue;
+    seen.add(key);
+    out.push({ v, dec: cleaned.includes('.') });
+  }
+  // 小数を優先、その中では降順（にdonateの合計が上に来やすい）
+  out.sort((a,b)=> (b.dec - a.dec) || (b.v - a.v));
+  return out.slice(0, 10);
+}
+
+function showCandidates(text){
+  const box = $('#ocrCands');
+  const cands = extractNumbers(text);
+  const raw = $('#ocrRaw');
+  raw.textContent = text.trim() || '(テキストなし)';
+  $('#rawWrap').style.display = 'block';
+
+  if(!cands.length){
+    box.innerHTML = '<div class="err show" style="display:block">数字が見つからなかった。下の欄に手で入れてね🙆‍♀️</div>';
+    return;
+  }
+  const cur = num(state.items[ocrItem] && state.items[ocrItem].val);
+  box.innerHTML = cands.map(c=>{
+    const label = c.dec ? c.v.toFixed(1) : String(c.v);
+    const isCur = cur !== null && Math.abs(cur - c.v) < 0.0001;
+    return '<button class="cand" data-cand="' + label + '">' + label + '<small>' + (isCur?'いまの数字':'この数字を入れる') + '</small></button>';
+  }).join('');
+  // 第1候補を手入力欄にも入れておく
+  const first = cands[0];
+  $('#manualVal').value = first.dec ? first.v.toFixed(1) : String(first.v);
+}
+
+document.addEventListener('click', (e)=>{
+  const b = e.target.closest('[data-cand]');
+  if(!b || !ocrItem) return;
+  state.items[ocrItem].val = b.dataset.cand;
+  save(true); render(); closeModal('ocrModal');
+  toast(b.dataset.cand + ' 個で判定したよ🎀');
+});
+
+/* ===================== 音（初期はミュート） ===================== */
+const SND_KEY = 'pokesleep-role-sound';
+let sound = { muted:true };  /* デフォルトはミュート。ボタンでONにしたときだけ鳴る */
+try{
+  const s = JSON.parse(localStorage.getItem(SND_KEY) || 'null');
+  if(s && typeof s.muted === 'boolean') sound.muted = s.muted;
+}catch(e){}
+let actx = null;
+function audioCtx(){
+  if(!actx){
+    const A = window.AudioContext || window.webkitAudioContext;
+    if(!A) return null;
+    try{ actx = new A(); }catch(e){ return null; }
+  }
+  if(actx.state === 'suspended') actx.resume();
+  return actx;
+}
+function tone(freq, start, dur, type, gain){
+  const c = audioCtx(); if(!c) return;
+  const o = c.createOscillator(), g = c.createGain();
+  o.type = type || 'sine'; o.frequency.value = freq;
+  o.connect(g); g.connect(c.destination);
+  const t0 = c.currentTime + start;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.linearRampToValueAtTime(gain || .12, t0 + .012);
+  g.gain.exponentialRampToValueAtTime(0.0008, t0 + dur);
+  o.start(t0); o.stop(t0 + dur + .03);
+}
+function playPop(){ if(sound.muted) return; tone(880,0,.09,'triangle',.12); tone(1318,.045,.12,'sine',.07); }
+function playChime(){ if(sound.muted) return; [784,988,1175].forEach((f,i)=>tone(f, i*.07, .3, 'sine', .10)); }
+function playFanfare(){ if(sound.muted) return; [659,784,988,1319].forEach((f,i)=>tone(f, i*.085, .34, 'triangle', .11)); tone(1568,.36,.55,'sine',.085); tone(1046,.36,.55,'sine',.06); }
+function playComplete(){ if(sound.muted) return; [523,659,784,1046,1319,1568].forEach((f,i)=>tone(f, i*.11, .5, 'triangle', .10)); }
+
+function syncSoundBtn(){
+  const b = $('#btnSound');
+  b.textContent = sound.muted ? '🔇' : '🔊';
+  b.dataset.muted = String(sound.muted);
+  b.setAttribute('aria-label', sound.muted ? '音はオフ（タップでオン）' : '音はオン（タップでオフ）');
+}
+$('#btnSound').addEventListener('click', ()=>{
+  sound.muted = !sound.muted;
+  try{ localStorage.setItem(SND_KEY, JSON.stringify(sound)); }catch(e){}
+  syncSoundBtn();
+  if(!sound.muted){
+    // タップの瞬間にAudioContextを起こしておく
+    try{ audioCtx(); }catch(e){}
+    playChime();
+    toast('音をオンにしたよ🔊');
+  } else {
+    toast('音をオフにしたよ🔇');
+  }
+});
+
+/* ===================== 紙吹雪 ===================== */
+function confetti(count){
+  const n = count || 54;
+  const colors = ['#ffb3d1','#a8dff4','#ffe6a3','#ffd0e3','#c8ecfb','#ffffff','#ff9ec4'];
+  for(let i=0;i<n;i++){
+    const p = document.createElement('i');
+    p.className = 'confetti';
+    const size = 6 + Math.random()*7;
+    p.style.left = (Math.random()*100) + 'vw';
+    p.style.width = size + 'px';
+    p.style.height = (size * (Math.random()>.5 ? 1 : 1.7)) + 'px';
+    p.style.background = colors[Math.floor(Math.random()*colors.length)];
+    p.style.borderRadius = Math.random()>.45 ? '50%' : '2px';
+    p.style.animationDuration = (1.5 + Math.random()*1.3) + 's';
+    p.style.animationDelay = (Math.random()*.45) + 's';
+    p.style.setProperty('--sway', (Math.random()*90-45).toFixed(0) + 'px');
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(), 3200);
+  }
+}
+
+/* セクション制覇・全体制覇の祝福 */
+let lastDone = new Set();
+function snapshotDone(){ lastDone = new Set(ALL.filter(x=>state.items[x.id].st===2).map(x=>x.id)); }
+function checkMilestones(){
+  const now = new Set(ALL.filter(x=>state.items[x.id].st===2).map(x=>x.id));
+  const sectionName = { food:'🍎 食材ぜんぶ', berry:'🍒 島きのみぜんぶ', skill:'✨ スキルぜんぶ' };
+  let celebrated = false;
+  ['food','berry','skill'].forEach(k=>{
+    const arr = ALL.filter(x=>x.kind===k);
+    const all = arr.every(x=>now.has(x.id));
+    const was = arr.every(x=>lastDone.has(x.id));
+    if(all && !was){
+      confetti(70); playComplete();
+      toast(sectionName[k] + ' 制覇！🎉 すごい！');
+      celebrated = true;
+    }
+  });
+  const allDone = ALL.every(x=>now.has(x.id));
+  if(allDone && lastDone.size !== ALL.length){
+    confetti(120); playFanfare();
+    setTimeout(()=>confetti(90), 500);
+    toast('🎀 ぜんぶ確保できた！ パーフェクト💖');
+    celebrated = true;
+  }
+  lastDone = now;
+  return celebrated;
+}
+
+/* ===================== 起動 ===================== */
+load();
+snapshotDone();
+syncSoundBtn();
+render();
+window.addEventListener('pageshow', (e)=>{ if(e.persisted){ load(); render(); } });
+</script>
+</body>
+</html>
