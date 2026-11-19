@@ -367,7 +367,7 @@ details.memo[open] summary .arw{transform:rotate(90deg)}
 .file-drop b{font-size:13.5px;}
 .file-drop small{display:block; font-size:11px; color:var(--ink-faint); margin-top:4px; font-weight:600}
 .file-drop input{display:none}
-.preview-img{max-width:100%; border-radius:14px; box-shadow:var(--shadow-s); margin-top:10px; display:block}
+.preview-img{max-width:100%; max-height:230px; object-fit:contain; border-radius:14px; box-shadow:var(--shadow-s); margin:10px auto 0; display:block; background:#fff}
 .ocr-status{font-size:12.5px; font-weight:800; color:#2c6b83; margin-top:12px; display:none}
 .ocr-status.show{display:block}
 .ocr-status .track{height:10px; border-radius:999px; background:#eef6fb; margin-top:6px; overflow:hidden}
@@ -573,8 +573,7 @@ details.raw pre{
     <p class="cap">この端末のブラウザに保存されている記録を、ファイルに残したり、べつの端末で読み込んだりできるよ。</p>
     <div class="bk">
       <button class="btn primary" id="btnExport">📤 記録を書き出す（ファイル保存）</button>
-      <button class="btn aqua" id="btnImportPick">📥 書き出したファイルを読み込む</button>
-      <input type="file" id="importFile" accept="application/json,.json" style="display:none">
+      <label class="btn aqua" id="btnImportPick" for="importFile" style="justify-content:center">📥 書き出したファイルを読み込む<input type="file" id="importFile" accept="application/json,.json" style="display:none"></label>
       <p class="cap" style="margin:2px 0 0">読み込むと、いまの記録はファイルの内容で置きかわるよ。</p>
     </div>
   </div>
@@ -810,6 +809,8 @@ function cardHTML(item){
     numHTML(item) +
     '<div class="picks"><span class="lbl">🎯 候補</span>' + picks + '</div>' +
     (item.note ? '<div class="source-note">💡 ' + item.note + '</div>' : '') +
+    (item.kind==='berry' ? '<div class="source-note">💡 きのみSを持った子を1匹。島ごとに入れかえる枠だから、きのみSだけ見ればOK</div>' : '') +
+    (item.kind==='skill' ? '<div class="source-note">💡 パーティの要。この役割を1匹キープできればOK</div>' : '') +
     (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>　ほか ' + item.recipe2 : '') + (item.ref2 ? '<br>👀 参考 ' + item.ref2 : '') + '</div>' : '') +
     '<details class="memo"><summary><span class="arw">▶</span>📝 メモ・手持ち・目標の変更</summary>' +
       '<div class="memo-body">' +
@@ -1005,7 +1006,7 @@ $('#btnExport').addEventListener('click', ()=>{
   setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
   toast('書き出したよ💾');
 });
-$('#btnImportPick').addEventListener('click', ()=> $('#importFile').click());
+
 $('#importFile').addEventListener('change', async (e)=>{
   const f = e.target.files[0]; if(!f) return;
   try{
