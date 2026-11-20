@@ -337,6 +337,45 @@ details.memo[open] summary .arw{transform:rotate(90deg)}
 .sec-head{display:flex; align-items:center; gap:8px; margin:16px 4px 10px; font-size:13px; font-weight:800; color:#6b5570}
 .sec-head .line{flex:1; height:2px; border-radius:2px; background:linear-gradient(90deg,rgba(255,179,209,.6),rgba(200,236,251,.2))}
 
+/* ===== にとよん誘導 ===== */
+.nbanner{
+  position:relative; z-index:2; margin:12px 0 10px; padding:12px 14px; border-radius:20px;
+  display:flex; align-items:center; gap:10px; text-decoration:none; color:#2c6b83;
+  background:linear-gradient(120deg,#e8f9ff 0%,#ffffff 45%,#fff0f7 100%);
+  border:2px solid #fff;
+  box-shadow:0 6px 18px rgba(140,200,230,.26), inset 0 0 0 1.5px #d8f1fb;
+  transition:transform .12s ease, box-shadow .12s ease; min-height:58px;
+}
+.nbanner:active{transform:translateY(2px); box-shadow:0 3px 10px rgba(140,200,230,.24), inset 0 0 0 1.5px #d8f1fb}
+.nbanner .nb-ic{font-size:26px; flex:0 0 auto; line-height:1}
+.nbanner .nb-tx{flex:1; min-width:0; font-size:13px; font-weight:800; line-height:1.3}
+.nbanner .nb-tx small{display:block; font-size:10.5px; font-weight:700; color:#7f9aa8; letter-spacing:.01em; margin-top:1px}
+.nbanner .nb-go{flex:0 0 auto; font-size:11px; font-weight:800; color:#fff; background:linear-gradient(180deg,#8fd6f0,#5cbde0);
+  padding:8px 12px; border-radius:999px; box-shadow:0 2px 0 #3fa6cd; white-space:nowrap}
+.nbanner.pink{background:linear-gradient(120deg,#fff0f7 0%,#ffffff 50%,#f0fbff 100%); color:#8a3f61}
+.nbanner.pink .nb-go{background:linear-gradient(180deg,#ffb0d0,#ff87b8); box-shadow:0 2px 0 #e2608f}
+
+/* 条件チップ */
+.conds{position:relative; z-index:2; margin-top:10px; display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.conds .lbl{font-size:10.5px; font-weight:800; color:var(--ink-faint); width:100%; margin-bottom:-2px}
+.cond{
+  border:1.6px solid #eef0f6; background:#fff; color:#937f99; font-family:inherit;
+  font-size:11.5px; font-weight:800; padding:6px 11px; border-radius:999px; cursor:pointer;
+  box-shadow:var(--shadow-s); min-height:34px; display:inline-flex; align-items:center; gap:4px;
+  transition:all .14s ease;
+}
+.cond[aria-pressed="true"]{
+  color:#c85585; background:linear-gradient(180deg,#fff,#ffe9f2); border-color:#ffc9dd;
+  box-shadow:0 2px 0 #ffd3e5, 0 4px 10px rgba(255,160,200,.26);
+}
+.cond[aria-pressed="true"]::before{content:"✓"; font-size:10px}
+
+/* 読み取り＋にとよん 2連ボタン */
+.ocr-row{position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:9px}
+.ocr-row .ocr-btn{margin-top:0; font-size:11.5px; padding:9px 4px; white-space:nowrap}
+.ocr-row .ocr-btn.nyt{color:#8a3f61; background:linear-gradient(180deg,#ffffff,#ffeef6);
+  box-shadow:0 2px 0 #ffd3e5,0 5px 12px rgba(255,160,200,.2), inset 0 1px 0 #fff; border:1.5px dashed #ffc9dd; text-decoration:none}
+
 /* ===== モーダル ===== */
 .modal{
   position:fixed; inset:0; z-index:100; display:none; align-items:flex-end; justify-content:center;
@@ -481,9 +520,9 @@ details.raw pre{
     <circle cx="32" cy="58" r="2.4" fill="#ffd0e3"/>
     <path d="M92 92 l2.2 5 5.4.5-4 3.7 1.1 5.3-4.7-2.9-4.7 2.9 1.1-5.3-4-3.7 5.4-.5z" fill="#ffe6a3"/>
   </svg>
-  <span class="kicker">🎀 for なほ's BOX</span>
+  <span class="kicker">🎀 32枠を1タップで仕分け</span>
   <h1>📋 ポケスリ役割チェック <span class="h1-sub">role check</span></h1>
-  <p class="intro">「この子いる？いらん？」を1タップで仕分け。🍎食材・🍒きのみ・✨スキルの役割ごとに、にとよんで出た1日の個数を入れると合格判定してくれるよ♡</p>
+  <p class="intro">「この子いる？いらん？」を1タップで仕分け。🍎食材・🍒きのみ・✨スキルの32枠に、にとよんで出た数字を入れると <b>合格</b>＆<b>エース級</b> まで判定してくれるよ♡</p>
   <div class="header-actions">
     <a class="btn primary" href="https://nitoyon.github.io/pokesleep-tool/iv/index.ja.html" target="_blank" rel="noopener">🧮 にとよんで計算する</a>
     <button class="btn aqua" id="btnBackup">💾 バックアップ</button>
@@ -515,6 +554,12 @@ details.raw pre{
   <button class="tab" role="tab" id="tab-skill" data-tab="skill" aria-selected="false">✨ スキル<em id="tabSkillCnt">0/6</em></button>
 </nav>
 
+<a class="nbanner" href="https://nitoyon.github.io/pokesleep-tool/iv/index.ja.html" target="_blank" rel="noopener">
+  <span class="nb-ic">🧮</span>
+  <span class="nb-tx">にとよんで 1日の数字を調べる<small>きのみエナジー・スキル回数・食材の個数が出るよ（別タブで開く）</small></span>
+  <span class="nb-go">ひらく →</span>
+</a>
+
 <div class="filters">
   <button class="chip" data-filter="all" aria-pressed="true">すべて</button>
   <button class="chip" data-filter="none" aria-pressed="false">⬜ 未確保のみ</button>
@@ -526,8 +571,10 @@ details.raw pre{
 <main id="list" class="grid" aria-live="polite"></main>
 
 <footer class="foot">
-  <b>数字の出どころ</b>：目標は「上位料理（初期エナジー約8万以上）のうち、その食材をいちばん多く使うレシピ×3食」の個数。レシピ量はゲームエイト料理一覧（2026-11-18更新）、参考個数は豆腐メンタルの食材別ランキング（にとよんツールで試算・食材確率M／性格無補正・日中毎分タップ／睡眠中タップなし）より。<br>
-  同じ食材でも料理や週によって必要数は動くので、<b>目標は各カードのメモ欄から自分で変えられる</b>よ。数字は目安として使ってね。<br>
+  <b>🍎 食材の目標</b>：「上位料理（初期エナジー約8万以上）のうち、その食材をいちばん多く使うレシピ×3食」の個数。レシピ量はゲームエイト料理一覧（2026-11-18更新）、参考個数は豆腐メンタルの食材別ランキング（にとよんツールで試算・食材確率M／性格無補正・日中毎分タップ／睡眠中タップなし）より。<br>
+  <b>🍒 きのみの目標</b>：カビゴンの好物きのみ（×2）込みの「1日のきのみエナジー」。基準はポケらく 島別きのみエナジーランキング（2026-11-16更新）のきのみの数S持ちの値で、<b>合格ライン＝3位のLv60値×0.78</b>（きのみ1個のエナジーはLv60→Lv50で約0.78倍）＝Lv50級、<b>エース級ライン＝1位のLv60値</b>。<br>
+  <b>✨ スキルの目標</b>：1日のスキル発動回数の期待値を、ポケモンスリープ攻略Wiki（スキル発動回数期待値一覧）・ポケスリ総合資料サイト・ゲームエイト・ポケらくの数値から設定。無補正の期待値＋スキル確率↑で届く範囲を「合格」、厳選を詰めた個体を「理想」に置いています。<br>
+  週や個体で必要数は動くので、<b>目標は各カードのメモ欄から自分で変えられる</b>よ。数字は目安として使ってね。<br>
   データはこの端末のブラウザにだけ保存される（サーバーには送らない）。機種変更の前に💾バックアップ。
 </footer>
 
@@ -539,6 +586,12 @@ details.raw pre{
     <button class="sheet-close" data-close="ocrModal" aria-label="閉じる">✕</button>
     <h2 id="ocrTitle">📸 スクショから読み取る</h2>
     <p class="cap" id="ocrTargetName">にとよんの画面をスクショして選んでね。数字だけ読み取って候補にするよ（画像は端末の外に出ないよ）</p>
+
+    <a class="nbanner pink" href="https://nitoyon.github.io/pokesleep-tool/iv/index.ja.html" target="_blank" rel="noopener" style="margin:0 0 12px">
+      <span class="nb-ic">🧮</span>
+      <span class="nb-tx">まだ数字がわからないときは にとよん<small>① にとよんで調べる → ② 画面をスクショ → ③ ここで読み取る</small></span>
+      <span class="nb-go">ひらく →</span>
+    </a>
 
     <label class="file-drop" id="fileDrop">
       <span class="big">🖼️</span>
@@ -589,11 +642,22 @@ details.raw pre{
     <div class="foot" style="margin:0 0 10px; border-style:solid; border-color:#ffe6f0">
       <b>1. 状態をポン</b><br>
       カードのボタンを押すたびに ⬜未確保 → 🔍厳選中 → ✅確保済み と切りかわるよ。<br><br>
-      <b>2. 数字を入れる（食材だけ）</b><br>
-      にとよんで計算した「1日の個数」を入れると、3食ぶんに足りてるか自動チェック。📸ボタンでスクショから読み取ることもできる。<br><br>
-      <b>3. メモを書く</b><br>
+      <b>2. 数字を入れる（食材・きのみ・スキル）</b><br>
+      にとよんで計算した数字を入れると自動チェック。<br>
+      ・🍎食材 … 1日の個数（3食ぶんに足りてるか）<br>
+      ・🍒きのみ … 1日のきのみエナジー（合格ライン＝きのみS Lv50級／エース級＝Lv60級）<br>
+      ・✨スキル … 1日のスキル発動回数（合格ライン／理想ライン）<br>
+      📸ボタンでスクショから読み取ることもできるよ（カンマ付きの12,240みたいな数字もOK）。<br><br>
+      <b>3. 条件チップをポン</b><br>
+      「きのみS」「スキル確率↑」など、その子が持ってるものを1タップでチェック。<br><br>
+      <b>4. メモを書く</b><br>
       「Lv50で銀種予定」「手持ちはゲンガー」など、自分用のメモを残せるよ。
     </div>
+    <a class="nbanner" href="https://nitoyon.github.io/pokesleep-tool/iv/index.ja.html" target="_blank" rel="noopener" style="margin:0 0 10px">
+      <span class="nb-ic">🧮</span>
+      <span class="nb-tx">数字は にとよんで調べる<small>個体をえらぶと 1日のきのみエナジー・スキル回数・食材の個数 が出るよ</small></span>
+      <span class="nb-go">ひらく →</span>
+    </a>
     <p class="cap" style="margin:0">保存は自動。ホーム画面に追加しておくと開きやすいよ🍓</p>
   </div>
 </div>
@@ -649,21 +713,58 @@ const FOOD = [
 ];
 
 const BERRY = [
-  { id:'b_cyan',   emoji:'🏖️', name:'シアンの砂浜',   picks:['デカヌチャン','オーダイル','ドードリオ'] },
-  { id:'b_tofu',   emoji:'🌋', name:'トープ洞窟',     picks:['バクフーン','ラグラージ','ガチゴラス'] },
-  { id:'b_snow',   emoji:'❄️', name:'ウノハナ雪原',   picks:['トドゼルガ','アローラキュウコン','マニューラ'] },
-  { id:'b_lapis',  emoji:'💎', name:'ラピスラズリ湖畔', picks:['メガニウム','バシャーモ'] },
-  { id:'b_gold',   emoji:'⚡', name:'ゴールド旧発電所', picks:['ハガネール','ライチュウ','エンペルト'] },
-  { id:'b_amber',  emoji:'🪨', name:'アンバー渓谷',   picks:['ボーマンダ','バタフリー'] }
+  { id:'b_cyan',  emoji:'🏖️', name:'シアンの砂浜',   berries:'オレン・モモン・シーヤ',
+    picks:['ドードリオ','オーダイル','ピクシー'], pass:25000, ace:34300,
+    ref:'きのみS Lv60：ドードリオ 34,261／オーダイル 33,037／ピクシー 31,993（Lv30は15,000前後）',
+    note:'きのみSなしだと約2/3（Lv60で22,800前後）まで落ちるよ。まずはきのみS持ちを1匹' },
+  { id:'b_tofu',  emoji:'🌋', name:'トープ洞窟',     berries:'ヒメリ・フィラ・オボン',
+    picks:['バクフーン','ラグラージ','キュウコン'], pass:26700, ace:34700,
+    ref:'きのみS Lv60：バクフーン 34,657／ラグラージ 34,322／キュウコン 34,175（Lv30は15,300前後）',
+    note:'3強の差が小さい島。きのみSさえ付いていればどの子でもエース級を狙えるよ' },
+  { id:'b_snow',  emoji:'❄️', name:'ウノハナ雪原',   berries:'チーゴ・キー・ウイ',
+    picks:['ダークライ','マニューラ','アローラキュウコン','トドゼルガ'], pass:25600, ace:33500,
+    ref:'きのみS Lv60：ダークライ 33,516／マニューラ 33,370／アローラキュウコン 32,884／トドゼルガ 32,119',
+    note:'ダークライは入手難度高め。マニューラ・アローラキュウコンで充分エース級' },
+  { id:'b_lapis', emoji:'💎', name:'ラピスラズリ湖畔', berries:'ドリ・マゴ・クラボ',
+    picks:['メガニウム','バシャーモ','ネイティオ'], pass:25500, ace:34300,
+    ref:'きのみS Lv60：メガニウム 34,325／バシャーモ 34,131／ネイティオ 32,648（Lv30は15,300前後）',
+    note:'ジュカイン（きのみバースト）もドリのみで実質きのみ役として使えるよ' },
+  { id:'b_gold',  emoji:'⚡', name:'ゴールド旧発電所', berries:'ウブ・ブリー・ベリブ',
+    picks:['ハガネール','ライチュウ','ジュペッタ'], pass:26000, ace:36100,
+    ref:'きのみS Lv60：ハガネール 36,115／ライチュウ 34,214／ジュペッタ 33,294（Lv30は16,000前後）',
+    note:'ハガネールが全体2位の性能。ライチュウは最速おてつだいで安定するよ' },
+  { id:'b_amber', emoji:'🪨', name:'アンバー渓谷',   berries:'カゴ・ラム・ヤチェ',
+    picks:['ボーマンダ','バタフリー','チルタリス'], pass:22500, ace:38000,
+    ref:'きのみS Lv60：ボーマンダ 37,979／バタフリー 29,910／チルタリス 28,839（Lv30は14,000前後）',
+    note:'ボーマンダだけ別格。いない場合はバタフリー・チルタリスで合格ラインを目指そう' }
 ];
 
 const SKILL = [
-  { id:'s_heal',  emoji:'💚', name:'ヒーラー',     picks:['サーナイト','ドダイトス','パーモット','ツボツボ','プクリン'] },
-  { id:'s_pot',   emoji:'🍲', name:'鍋拡張',       picks:['ジバコイル','グレイシア'], note:'兼任OK：ボーマンダ・マスカーニャ・レントラー' },
-  { id:'s_cook',  emoji:'🌟', name:'料理チャンス', picks:['デデンネ','ラグラージ','ジジーロン'] },
-  { id:'s_ener',  emoji:'⚡', name:'エナチャM',    picks:['デンリュウ','エーフィ'] },
-  { id:'s_burst', emoji:'💥', name:'きのみバースト', picks:['ジュカイン'] },
-  { id:'s_dream', emoji:'✨', name:'ゆめのかけら', picks:['ムシャーナ','マルノーム','ルカリオ'] }
+  { id:'s_heal',  emoji:'💚', name:'ヒーラー',     skill:'げんきオールS／げんきエールS',
+    picks:['サーナイト','プクリン','クレセリア','パーモット','ドダイトス'], pass:4.0, ideal:5.0,
+    ref:'げんきオールLv6は1回18回復。4回/日で元気8割キープ、5回/日（18×5=90）で15時間ぶんの減りをまかなえる。無補正の期待値はサーナイト 2.3回/日（天井込み2.5）',
+    src:'攻略Wiki スキル発動回数期待値／げんきエールの考察、ゲームエイト ヒーラー' },
+  { id:'s_pot',   emoji:'🍲', name:'鍋拡張',       skill:'料理パワーアップS',
+    picks:['ジバコイル','グレイシア','ブースター','マスカーニャ'], pass:3.5, ideal:5.0,
+    note:'兼任OK：ボーマンダ・マスカーニャ・レントラー',
+    ref:'無補正の期待値 ジバコイル 3.45回/日・グレイシア 3.4・ブースター 3.15（マスカーニャ 1.53）。大型レシピを狙う日は「発動の早さ」も大事',
+    src:'攻略Wiki 料理パワーアップ／スイッチ攻略Press' },
+  { id:'s_cook',  emoji:'🌟', name:'料理チャンス', skill:'料理チャンスS',
+    picks:['デデンネ','ラグラージ','ジジーロン'], pass:3.0, ideal:4.0,
+    ref:'デデンネは無補正 2.7〜2.9回/日、スキル確率Mで 3.7〜4.0回/日。大成功は1回+4〜10%で最大+70%まで蓄積',
+    src:'ポケらく 料理チャンスS／攻略Wiki' },
+  { id:'s_ener',  emoji:'⚡', name:'エナチャM',    skill:'エナジーチャージM',
+    picks:['デンリュウ','エーフィ'], pass:2.5, ideal:3.5,
+    ref:'デンリュウ 2.5回/日（天井込み 2.66）・エーフィ 2.44。スキル確率M＋おてスピで 3.3前後まで伸びる',
+    src:'攻略Wiki スキル発動回数期待値' },
+  { id:'s_burst', emoji:'💥', name:'きのみバースト', skill:'きのみバースト',
+    picks:['ジュカイン','ウォーグル','ゴウカザル'], pass:2.0, ideal:3.0,
+    ref:'ジュカイン 1.7回/日（天井込み 2.0）・ウォーグル 1.9（2.2）・ゴウカザル 1.8（2.1）。Lv6で自分30個＋チーム5個ずつ',
+    src:'攻略Wiki きのみバースト／ポケスリ総合資料サイト' },
+  { id:'s_dream', emoji:'✨', name:'ゆめのかけら', skill:'ゆめのかけらゲットS',
+    picks:['マルノーム','ルカリオ','ムシャーナ'], pass:2.0, ideal:3.0,
+    ref:'マルノーム 2.66回/日（標準条件 4.04）・ルカリオ 2.61・ムシャーナ 1.95。Lv7で固定1,800個/ランダム900〜3,600個',
+    src:'攻略Wiki ゆめのかけらゲット／ポケスリ総合資料サイト' }
 ];
 
 /* 参考個数がいちばん多いポケモン（強調表示用） */
@@ -671,7 +772,14 @@ const BEST = {
   herb:'カイリュー', corn:'キテルグマ', ginger:'バンギラス', milk:'カメックス', cacao:'ドオー',
   honey:'フシギバナ', tomato:'レントラー', potato:'ハルクジラ', meat:'ボスゴドラ', egg:'ハピナス',
   soy:'ゴローニャ', oil:'レントラー', apple:'ラウドボーン', mushroom:'ミカルゲ', leek:'カモネギ',
-  coffee:'クワガノン', pumpkin:'パンプジン', avocado:'フライゴン', nuts:'エルフーン'
+  coffee:'クワガノン', pumpkin:'パンプジン', avocado:'フライゴン', nuts:'エルフーン',
+  b_cyan:'ドードリオ', b_tofu:'バクフーン', b_snow:'ダークライ', b_lapis:'メガニウム', b_gold:'ハガネール', b_amber:'ボーマンダ'
+};
+
+/* 条件チップ（1タップで「その子が持ってるもの」をメモ） */
+const CONDS = {
+  berry:['きのみS','おてスピ↑','おてボ','せいかく◯'],
+  skill:['スキル確率↑','おてスピ↑','金種予定','せいかく◯']
 };
 
 /* ===================== 状態 ===================== */
@@ -682,7 +790,7 @@ const ALL = [
   ...SKILL.map(x=>({...x, kind:'skill'}))
 ];
 let state = { tab:'food', filter:'all', items:{} };
-ALL.forEach(x=>{ state.items[x.id] = { st:0, val:'', memo:'', poke:'', target:null } });
+ALL.forEach(x=>{ state.items[x.id] = { st:0, val:'', memo:'', poke:'', target:null, chips:{} } });
 
 function load(){
   try{
@@ -701,7 +809,8 @@ function load(){
               val: typeof v.val === 'string' ? v.val : (typeof v.val === 'number' ? String(v.val) : ''),
               memo: typeof v.memo === 'string' ? v.memo : '',
               poke: typeof v.poke === 'string' ? v.poke : '',
-              target: (typeof v.target === 'number' && v.target > 0) ? v.target : null
+              target: (typeof v.target === 'number' && v.target > 0) ? v.target : null,
+              chips: (v.chips && typeof v.chips === 'object') ? Object.fromEntries(Object.entries(v.chips).filter(([k,x])=>x)) : {}
             };
           }
         });
@@ -722,9 +831,29 @@ function save(now){
 /* ===================== ユーティリティ ===================== */
 const $ = (s, el=document)=>el.querySelector(s);
 const $$ = (s, el=document)=>[...el.querySelectorAll(s)];
+const NITOYON = 'https://nitoyon.github.io/pokesleep-tool/iv/index.ja.html';
 const ST_LABEL = ['⬜ 未確保','🔍 厳選中','✅ 確保済み'];
-function targetOf(item){ const t = state.items[item.id].target; return (t && t>0) ? t : item.target; }
 function num(v){ const n = parseFloat(String(v).replace(/[^0-9.\-]/g,'')); return isFinite(n) ? n : null; }
+function fmtNum(n, kind){
+  if(n === null || n === undefined) return '—';
+  if(kind === 'skill') return (Math.round(n*10)/10).toFixed(1);
+  return Math.round(n).toLocaleString('ja-JP');
+}
+function thresholds(item){
+  const ov = state.items[item.id].target;
+  if(item.kind === 'food'){
+    return { pass: (ov && ov > 0) ? ov : item.target, ideal: null };
+  }
+  const pass = (ov && ov > 0) ? ov : item.pass;
+  const base = (item.kind === 'berry') ? item.ace : item.ideal;
+  return { pass, ideal: Math.max(base || pass, pass) };
+}
+function subText(item){
+  const {pass, ideal} = thresholds(item);
+  if(item.kind === 'food') return '目標 ' + fmtNum(pass,'food') + ' 個/日';
+  if(item.kind === 'berry') return '合格 ' + fmtNum(pass,'berry') + '／エース ' + fmtNum(ideal,'berry');
+  return '合格 ' + fmtNum(pass,'skill') + '回／理想 ' + fmtNum(ideal,'skill') + '回';
+}
 
 function toast(msg){
   const t = $('#toast'); t.textContent = msg; t.classList.add('show');
@@ -751,16 +880,25 @@ function burst(el){
 
 /* ===================== 描画 ===================== */
 function judgeBox(item){
-  if(item.kind !== 'food') return '';
-  const t = targetOf(item);
+  const { pass, ideal } = thresholds(item);
   const n = num(state.items[item.id].val);
+  const kind = item.kind;
   let cls='', label='', pct='';
   let ratio = 0;
   if(n !== null && n > 0){
-    ratio = n / t;
-    if(ratio >= 1){ cls='clear'; label='🎉 3食クリア！'; }
-    else if(ratio >= 2/3){ cls='ok'; label='✅ 合格（2食ライン）'; }
-    else { cls='low'; label='⚠️ あと ' + (Math.round((t-n)*10)/10) + ' 個'; }
+    ratio = n / pass;
+    if(kind === 'food'){
+      if(ratio >= 1){ cls='clear'; label='🎉 3食クリア！'; }
+      else if(ratio >= 2/3){ cls='ok'; label='✅ 合格（2食ライン）'; }
+      else { cls='low'; label='⚠️ あと ' + Math.round(pass-n).toLocaleString('ja-JP') + ' 個'; }
+    } else {
+      if(n >= ideal){ cls='clear'; label = (kind === 'berry') ? '🎉 エース級！' : '🎉 理想ライン！'; }
+      else if(n >= pass){ cls='ok'; label='✅ 合格'; }
+      else {
+        cls='low';
+        label = '⚠️ あと ' + (kind === 'skill' ? (Math.round((pass-n)*10)/10).toFixed(1) + ' 回' : Math.round(pass-n).toLocaleString('ja-JP'));
+      }
+    }
     pct = Math.round(ratio*100) + '%';
   }
   let judge = '<div class="judge ' + cls + '"><span class="lbltxt">' + (label || '数字を入れると判定するよ') + '</span>' + (pct?'<span class="pct">'+pct+'</span>':'') + '</div>';
@@ -770,19 +908,41 @@ function judgeBox(item){
   return judge + bar;
 }
 
-function numHTML(item){
-  if(item.kind !== 'food') return '';
-  const t = targetOf(item);
-  return '<div class="numarea">' +
-      '<div class="numrow">' +
-        '<label for="n_' + item.id + '">1日の個数</label>' +
-        '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="number" inputmode="decimal" step="0.1" min="0" placeholder="" value="' + (state.items[item.id].val || '') + '">' +
-        '<span class="unit">個</span>' +
-      '</div>' +
-      '<div class="target-line"><span>目標（3食）</span><b>' + t + ' 個</b></div>' +
-      '<div class="judgewrap">' + judgeBox(item) + '</div>' +
+function condsHTML(item){
+  const list = CONDS[item.kind];
+  if(!list) return '';
+  const cur = state.items[item.id].chips || {};
+  return '<div class="conds"><span class="lbl">✅ 持ってる条件をポン（メモ用）</span>' +
+    list.map(c=>'<button class="cond" data-cond="' + item.id + '" data-condval="' + escapeAttr(c) + '" aria-pressed="' + (cur[c] ? 'true' : 'false') + '">' + c + '</button>').join('') +
+  '</div>';
+}
+
+function numInner(item){
+  const { pass, ideal } = thresholds(item);
+  const s = state.items[item.id];
+  const isFood = item.kind === 'food', isBerry = item.kind === 'berry';
+  const label = isFood ? '1日の個数' : (isBerry ? '1日のきのみエナジー' : '1日のスキル回数');
+  const unit  = isFood ? '個' : (isBerry ? '/日' : '回/日');
+  const mode  = isFood ? 'decimal' : (isBerry ? 'numeric' : 'decimal');
+  const ph    = isFood ? '' : (isBerry ? '例：12,240' : '例：5.0');
+  const line1 = isFood ? '目標（3食）' : (isBerry ? '合格ライン（きのみS Lv50級）' : '合格ライン');
+  const line2 = isFood ? '' : (isBerry ? 'エース級（Lv60級）' : '理想ライン');
+  return '<div class="numrow">' +
+      '<label for="n_' + item.id + '">' + label + '</label>' +
+      '<input class="numin" id="n_' + item.id + '" data-num="' + item.id + '" type="text" inputmode="' + mode + '" autocomplete="off" placeholder="' + ph + '" value="' + escapeAttr(s.val || '') + '">' +
+      '<span class="unit">' + unit + '</span>' +
     '</div>' +
-    '<button class="ocr-btn" data-ocr="' + item.id + '">📸 スクショから読み取る</button>';
+    '<div class="target-line"><span>' + line1 + '</span><b>' + fmtNum(pass, item.kind) + '</b></div>' +
+    (line2 ? '<div class="target-line"><span>' + line2 + '</span><b>' + fmtNum(ideal, item.kind) + '</b></div>' : '') +
+    '<div class="judgewrap">' + judgeBox(item) + '</div>';
+}
+
+function numHTML(item){
+  return '<div class="numarea">' + numInner(item) + '</div>' +
+    '<div class="ocr-row">' +
+      '<button class="ocr-btn" data-ocr="' + item.id + '">📸 読み取る</button>' +
+      '<a class="ocr-btn nyt" href="' + NITOYON + '" target="_blank" rel="noopener">🧮 にとよんで調べる</a>' +
+    '</div>';
 }
 
 function cardHTML(item){
@@ -799,33 +959,35 @@ function cardHTML(item){
     return '<span class="pick ' + (isBest?'best':'') + '">' + (isBest?'👑 ':'') + p + '</span>';
   }).join('');
 
-  const t = targetOf(item);
   const memo = s.memo || '', poke = s.poke || '';
+  const defTarget = (item.kind === 'food') ? item.target : item.pass;
 
   return '<article class="card ' + cardCls + '" data-id="' + item.id + '">' +
     '<span class="edge"></span>' + ribbonHTML(st) +
     '<div class="card-head">' +
       '<div class="emoji">' + item.emoji + '</div>' +
       '<div class="card-title"><h3>' + item.name + badges + '</h3>' +
-        '<div class="sub">' + (item.kind==='food' ? '目標 ' + t + ' 個/日' : (item.kind==='berry' ? '島のきのみ枠' : 'スキル役')) + '</div>' +
+        '<div class="sub">' + subText(item) + '</div>' +
       '</div>' +
     '</div>' +
     '<button class="status st-' + st + '" data-st="' + item.id + '" aria-label="状態を切りかえる（いま ' + ST_LABEL[st] + '）">' +
       ST_LABEL[st] + '<span class="hint">タップで切替</span>' +
     '</button>' +
+    condsHTML(item) +
     numHTML(item) +
     '<div class="picks"><span class="lbl">🎯 候補</span>' + picks + '</div>' +
     (item.note ? '<div class="source-note">💡 ' + item.note + '</div>' : '') +
-    (item.kind==='berry' ? '<div class="source-note">💡 きのみSを持った子を1匹。島ごとに入れかえる枠だから、きのみSだけ見ればOK</div>' : '') +
-    (item.kind==='skill' ? '<div class="source-note">💡 パーティの要。この役割を1匹キープできればOK</div>' : '') +
+    (item.kind==='berry' ? '<div class="source-note">📖 ' + item.berries + ' が好物（エナジー×2）<br>　' + item.ref + '</div>' +
+      '<div class="source-note">📸 にとよんの「好みきのみ」をその島のきのみにしてからスクショしてね（×2が入るよ）</div>' +
+      '<div class="source-note">📊 出典：ポケらく 島別きのみエナジーランキング（2026-11-16更新）</div>' : '') +
+    (item.kind==='skill' ? '<div class="source-note">📖 ' + item.skill + '：' + item.ref + '</div>' +
+      '<div class="source-note">📊 出典：' + item.src + '</div>' : '') +
     (item.kind==='food' ? '<div class="source-note">📖 ' + item.recipe + (item.recipe2 ? '<br>　ほか ' + item.recipe2 : '') + '<br>👀 参考 ' + item.ref + (item.ref2 ? ' ・ ' + item.ref2 : '') + '</div>' : '') +
     '<details class="memo"><summary><span class="arw">▶</span>📝 メモ・手持ち・目標の変更</summary>' +
       '<div class="memo-body">' +
         '<div class="row"><span>手持ち</span><input data-field="poke" data-id="' + item.id + '" placeholder="例：ゲンガー（たまご）" value="' + escapeAttr(poke) + '"></div>' +
         '<div class="row"><span>メモ</span><input data-field="memo" data-id="' + item.id + '" placeholder="例：Lv50で銀種予定" value="' + escapeAttr(memo) + '"></div>' +
-        (item.kind==='food' ?
-          '<div class="row"><span>目標</span><div class="tgt-edit"><input type="number" step="1" min="1" data-target="' + item.id + '" placeholder="' + item.target + '" value="' + (state.items[item.id].target ?? '') + '"><button data-targetreset="' + item.id + '">初期値に戻す</button></div></div>'
-          : '') +
+        '<div class="row"><span>目標</span><div class="tgt-edit"><input type="text" inputmode="decimal" data-target="' + item.id + '" placeholder="' + defTarget + '" value="' + (state.items[item.id].target ?? '') + '"><button data-targetreset="' + item.id + '">初期値に戻す</button></div></div>' +
       '</div>' +
     '</details>' +
   '</article>';
@@ -889,7 +1051,7 @@ function render(){ renderList(); renderProgress(); }
 
 /* ===================== イベント ===================== */
 document.addEventListener('click', (e)=>{
-  const t = e.target.closest('[data-st],[data-tab],[data-filter],[data-filter-set],[data-ocr],[data-targetreset]');
+  const t = e.target.closest('[data-st],[data-tab],[data-filter],[data-filter-set],[data-ocr],[data-targetreset],[data-cond]');
   if(!t) return;
 
   if(t.dataset.tab){
@@ -927,6 +1089,16 @@ document.addEventListener('click', (e)=>{
     const id = t.dataset.targetReset;
     state.items[id].target = null; save(); render(); toast('目標を初期値にもどしたよ'); return;
   }
+  if(t.dataset.cond){
+    const id = t.dataset.cond, cv = t.dataset.condval;
+    const it = state.items[id];
+    it.chips = it.chips || {};
+    if(it.chips[cv]) delete it.chips[cv]; else it.chips[cv] = 1;
+    save();
+    t.setAttribute('aria-pressed', it.chips[cv] ? 'true' : 'false');
+    if(it.chips[cv]){ playPop(); burst(t); }
+    return;
+  }
   if(t.dataset.ocr){
     openOCR(t.dataset.ocr); return;
   }
@@ -948,40 +1120,50 @@ document.addEventListener('input', (e)=>{
   }
   if(el.dataset.target){
     const id = el.dataset.target;
-    const v = parseFloat(el.value);
-    state.items[id].target = (isFinite(v) && v > 0) ? v : null;
+    const v = num(el.value);
+    state.items[id].target = (v !== null && v > 0) ? v : null;
     save();
-    const card = el.closest('.card');
-    if(card) card.querySelector('.sub').textContent = '目標 ' + targetOf(ALL.find(x=>x.id===id)) + ' 個/日';
+    const item = ALL.find(x=>x.id===id); if(!item) return;
+    const card = document.querySelector('.card[data-id="' + id + '"]');
+    if(card){
+      const sub = card.querySelector('.sub'); if(sub) sub.textContent = subText(item);
+      const area = card.querySelector('.numarea'); if(area) area.innerHTML = numInner(item);
+    }
     updateCardJudge(id);
     return;
   }
 });
 
 function updateCardJudge(id){
-  const item = ALL.find(x=>x.id===id); if(!item || item.kind!=='food') return;
+  const item = ALL.find(x=>x.id===id); if(!item) return;
   const card = document.querySelector('.card[data-id="' + id + '"]'); if(!card) return;
   const wrap = card.querySelector('.judgewrap'); if(!wrap) return;
   wrap.innerHTML = judgeBox(item);
-  const newArea = wrap;
-  // ラインを超えた瞬間だけお祝い（ドパ）
-  const t = targetOf(item); const n = num(state.items[id].val);
+  const { pass, ideal } = thresholds(item);
+  const n = num(state.items[id].val);
   const prev = card.dataset.prevRatio === undefined ? null : parseFloat(card.dataset.prevRatio);
-  const ratio = (n !== null && n > 0) ? n / t : 0;
+  const ratio = (n !== null && n > 0) ? n / pass : 0;
+  const idealRatio = (ideal && ideal > 0) ? ideal / pass : Infinity;
+
   if(n !== null && n > 0){
-    if(ratio >= 1 && (prev === null || prev < 1) && !card.dataset.celebrated){
+    const hitIdeal = ratio >= idealRatio && (prev === null || prev < idealRatio) && !card.dataset.celebratedIdeal;
+    const hitPass  = ratio >= 1 && (prev === null || prev < 1) && !card.dataset.celebrated;
+    const hitFood2 = item.kind === 'food' && ratio >= 2/3 && ratio < 1 && (prev === null || prev < 2/3) && !card.dataset.celebratedOk;
+
+    if(hitIdeal || (item.kind === 'food' && hitPass)){
+      card.dataset.celebratedIdeal = '1'; card.dataset.celebrated = '1';
+      burst(wrap); burst(wrap); confetti(46); playFanfare(); wrap.classList.add('pop');
+      toast(item.kind === 'food' ? '🎉 3食クリア！ この子は頼れる子だね💖'
+        : (item.kind === 'berry' ? '🎉 エース級！ この島はこの子にまかせた💖' : '🎉 理想ライン！ この役はこの子で決まり💖'));
+    } else if(hitPass){
       card.dataset.celebrated = '1';
-      burst(newArea); burst(newArea);
-      confetti(44);
-      playFanfare();
-      newArea.classList.add('pop');
-      toast('🎉 3食クリア！ この子は頼れる子だね💖');
-    } else if(ratio >= 2/3 && ratio < 1 && (prev === null || prev < 2/3) && !card.dataset.celebratedOk){
-      card.dataset.celebratedOk = '1';
-      burst(newArea);
-      playChime();
+      burst(wrap); confetti(26); playChime();
+      toast('✅ 合格ライン突破！💖');
+    } else if(hitFood2){
+      card.dataset.celebratedOk = '1'; burst(wrap); playChime();
     }
   }
+  if(n !== null && ratio < idealRatio) delete card.dataset.celebratedIdeal;
   if(n !== null && ratio < 1) delete card.dataset.celebrated;
   if(n !== null && ratio < 2/3) delete card.dataset.celebratedOk;
   card.dataset.prevRatio = String(ratio);
@@ -992,7 +1174,7 @@ $('#btnHelp').addEventListener('click', ()=> openModal('helpModal'));
 $('#btnBackup').addEventListener('click', ()=> openModal('bkModal'));
 $('#btnReset').addEventListener('click', ()=>{
   if(!confirm('ぜんぶの記録（状態・数字・メモ）をリセットする？')) return;
-  ALL.forEach(x=>{ state.items[x.id] = { st:0, val:'', memo:'', poke:'', target:null }; });
+  ALL.forEach(x=>{ state.items[x.id] = { st:0, val:'', memo:'', poke:'', target:null, chips:{} }; });
   save(true); render(); toast('リセットしたよ🎀');
 });
 function openModal(id){ $('#'+id).classList.add('open'); document.body.style.overflow='hidden'; }
@@ -1002,7 +1184,7 @@ $$('.modal').forEach(m=> m.addEventListener('click', (e)=>{ if(e.target === m) c
 
 /* バックアップ */
 $('#btnExport').addEventListener('click', ()=>{
-  const data = { app:'pokesleep-role', version:1, savedAt:new Date().toISOString(), state };
+  const data = { app:'pokesleep-role', version:2, savedAt:new Date().toISOString(), state };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const a = document.createElement('a');
   const d = new Date();
@@ -1027,10 +1209,11 @@ $('#importFile').addEventListener('change', async (e)=>{
       if(v && typeof v === 'object'){
         state.items[x.id] = {
           st:[0,1,2].includes(v.st)?v.st:0,
-          val: typeof v.val==='string'?v.val:'',
+          val: typeof v.val==='string'?v.val:(typeof v.val==='number'?String(v.val):''),
           memo: typeof v.memo==='string'?v.memo:'',
           poke: typeof v.poke==='string'?v.poke:'',
-          target: (typeof v.target==='number' && v.target>0)?v.target:null
+          target: (typeof v.target==='number' && v.target>0)?v.target:null,
+          chips: (v.chips && typeof v.chips==='object') ? Object.fromEntries(Object.entries(v.chips).filter(([k,x])=>x)) : {}
         };
       }
     });
@@ -1042,11 +1225,14 @@ $('#importFile').addEventListener('change', async (e)=>{
 
 /* ===================== OCR ===================== */
 let ocrItem = null;
+let ocrKind = 'food';
 
 function openOCR(id){
   ocrItem = id;
   const item = ALL.find(x=>x.id===id);
-  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。数字だけ拾って候補にするよ（画像は端末の外に出ないよ）';
+  ocrKind = item.kind;
+  const what = item.kind==='food' ? '1日の個数' : (item.kind==='berry' ? '1日のきのみエナジー（カンマ付きの大きい数字もOK）' : '1日のスキル回数');
+  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。' + what + 'を候補にするよ（画像は端末の外に出ないよ）';
   $('#ocrCands').innerHTML = '';
   $('#ocrRaw').textContent = '';
   $('#rawWrap').style.display = 'none';
@@ -1068,7 +1254,6 @@ $('#manualSet').addEventListener('click', ()=>{
   state.items[ocrItem].val = v; save(true); render(); closeModal('ocrModal');
   toast('数字を入れたよ🎀');
 });
-
 async function runOCR(file){
   const errBox = $('#ocrErr'), status = $('#ocrStatus'), bar = $('#ocrBar');
   errBox.classList.remove('show');
@@ -1166,18 +1351,68 @@ function loadTesseractLib(){
   });
 }
 
-/* 数字候補の抽出：％・Lv・時間・大きなエナジー値を除外 */
-function extractNumbers(text){
-  // エナジー値（12,240）・％・Lv・時間は先に消してから数字を拾う
+/* 数字候補の抽出：食材＝個数 / きのみ＝エナジー（カンマの大数値も）/ スキル＝回数 */
+function extractNumbers(text, kind, hint){
+  const out = [];
+  const seen = new Set();
+  const push = (v, dec, w)=>{
+    const key = dec ? v.toFixed(1) : String(Math.round(v));
+    if(seen.has(key)) return;
+    seen.add(key);
+    out.push({ v, dec, w: (w === undefined ? 1 : w) });
+  };
+
+  if(kind === 'berry'){
+    const t = text
+      .replace(/\d+(?:\.\d+)?\s*[%％]/g, ' ')
+      .replace(/[Ll][Vv]\.?\s*\d+/g, ' ')
+      .replace(/\d{1,3}(?:,\d{3})+\s*(?:秒|回|匹|頭|時間|びょう)/g, ' ')   // 2,300秒 はエナジーじゃない
+      .replace(/\d{4,6}\s*(?:秒|回|匹|頭|時間|びょう)/g, ' ');
+    // 「きのみ」のうしろに出る最初のエナジー値を最優先（総エナジーよりきのみを先に）
+    const sec = t.match(/きのみ[^0-9]{0,24}(\d{1,3}(?:,\d{3})+|\d{4,6})/);
+    if(sec){
+      const v = parseFloat(sec[1].replace(/,/g,''));
+      if(isFinite(v) && v >= 500 && v <= 200000) push(v, false, 0);
+    }
+    const re = /\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d{4,6}/g;   // 12,240 / 12240
+    let m;
+    while((m = re.exec(t)) !== null){
+      const v = parseFloat(m[0].replace(/,/g,''));
+      if(!isFinite(v) || v < 500 || v > 200000) continue;
+      push(v, false, 1);
+    }
+    out.sort((a,b)=> (a.w - b.w) || (b.v - a.v));
+    return out.slice(0, 10);
+  }
+
+  if(kind === 'skill'){
+    const t = text
+      .replace(/\d+(?:\.\d+)?\s*[%％]/g, ' ')
+      .replace(/[Ll][Vv]\.?\s*\d+/g, ' ');
+    // 「◯回」の並びは きのみ→食材→スキル の順なので、最後の1つを最優先
+    const ka = [...t.matchAll(/(\d+(?:\.\d+)?)\s*回/g)]
+      .map(x=>parseFloat(x[1]))
+      .filter(v=> isFinite(v) && v >= 0.3 && v <= 12);
+    if(ka.length) push(ka[ka.length-1], ka[ka.length-1] % 1 !== 0, 0);
+    ka.forEach(v=> push(v, v % 1 !== 0, 1));
+    const re = /\d+(?:\.\d+)?/g;
+    let m;
+    while((m = re.exec(t)) !== null){
+      const raw = m[0];
+      const v = parseFloat(raw);
+      if(!isFinite(v) || v < 0.3 || v > 12) continue;
+      push(v, raw.includes('.'), 1);
+    }
+    out.sort((a,b)=> (a.w - b.w) || (b.dec - a.dec) || (b.v - a.v));
+    return out.slice(0, 10);
+  }
+
   const t = text
     .replace(/\d{1,3}(?:[,\s]\d{3})+/g, ' ')                 // 12,240 / 12 240
     .replace(/\d+(?:\.\d+)?\s*[%％]/g, ' ')                   // 94.2%
     .replace(/[Ll][Vv]\.?\s*\d+/g, ' ')                        // Lv.60
     .replace(/[レl][ベv][ルl]\s*\d+/g, ' ')
     .replace(/\d+\s*(?:時間|じかん|エナジー?)/g, ' ');
-
-  const out = [];
-  const seen = new Set();
   const re = /\d+(?:\.\d+)?/g;
   let m;
   while((m = re.exec(t)) !== null){
@@ -1187,37 +1422,34 @@ function extractNumbers(text){
     // 1日の個数はふつう 1〜200。大きすぎる値（エナジー等）は捨てる
     if(v < 1 || v > 200) continue;
     if(/^0\d/.test(raw)) continue;
-    const dec = raw.includes('.');
-    const key = dec ? v.toFixed(1) : String(v);
-    if(seen.has(key)) continue;
-    seen.add(key);
-    out.push({ v, dec });
+    push(v, raw.includes('.'));
   }
-  // 小数（16.4 など）を先に、その中では大きい順
   out.sort((a,b)=> (b.dec - a.dec) || (b.v - a.v));
   return out.slice(0, 10);
 }
 
 function showCandidates(text){
   const box = $('#ocrCands');
-  const cands = extractNumbers(text);
+  const kind = ocrKind || 'food';
+  const cands = extractNumbers(text, kind);
   const raw = $('#ocrRaw');
   raw.textContent = text.trim() || '(テキストなし)';
   $('#rawWrap').style.display = 'block';
 
   if(!cands.length){
-    box.innerHTML = '<div class="err show" style="display:block">数字が見つからなかった。下の欄に手で入れてね🙆‍♀️</div>';
+    box.innerHTML = '<div class="err show" style="display:block">' + (kind === 'berry' ? 'エナジーの数字が見つからなかった。下の欄に手で入れてね🙆‍♀️' : '数字が見つからなかった。下の欄に手で入れてね🙆‍♀️') + '</div>';
     return;
   }
   const cur = num(state.items[ocrItem] && state.items[ocrItem].val);
   box.innerHTML = cands.map(c=>{
-    const label = c.dec ? c.v.toFixed(1) : String(c.v);
+    const label = (kind === 'skill') ? c.v.toFixed(1) : Math.round(c.v).toLocaleString('ja-JP');
     const isCur = cur !== null && Math.abs(cur - c.v) < 0.0001;
-    return '<button class="cand" data-cand="' + label + '">' + label + '<small>' + (isCur?'いまの数字':'この数字を入れる') + '</small></button>';
+    const note = isCur ? 'いまの数字' : (kind === 'berry' ? 'エナジー/日' : (kind === 'skill' ? '回/日' : 'この数字を入れる'));
+    return '<button class="cand" data-cand="' + label + '">' + label + '<small>' + note + '</small></button>';
   }).join('');
   // 第1候補を手入力欄にも入れておく
   const first = cands[0];
-  $('#manualVal').value = first.dec ? first.v.toFixed(1) : String(first.v);
+  $('#manualVal').value = (kind === 'skill') ? first.v.toFixed(1) : Math.round(first.v).toLocaleString('ja-JP');
 }
 
 document.addEventListener('click', (e)=>{
@@ -1228,7 +1460,7 @@ document.addEventListener('click', (e)=>{
   playPop();
   const c = document.querySelector('.card[data-id="' + ocrItem + '"] .judge');
   if(c) burst(c);
-  toast(b.dataset.cand + ' 個で判定したよ🎀');
+  toast(b.dataset.cand + (ocrKind === 'skill' ? ' 回' : '') + ' で判定したよ🎀');
 });
 
 /* ===================== 音（初期はミュート） ===================== */
