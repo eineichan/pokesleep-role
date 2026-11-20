@@ -1235,15 +1235,16 @@ function openOCR(id){
   ocrItem = id;
   const item = ALL.find(x=>x.id===id);
   ocrKind = item.kind;
-  const what = item.kind==='food' ? '1日の個数' : (item.kind==='berry' ? '1日のきのみエナジー（カンマ付きの大きい数字もOK）' : '1日のスキル回数');
-  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。' + what + 'を候補にするよ（画像は端末の外に出ないよ）';
+  const what = item.kind==='food' ? '1日の個数' : (item.kind==='berry' ? '1日のきのみエナジー' : '1日のスキル回数');
+  const extra = item.kind==='berry' ? '（カンマ付きの大きい数字もOK）' : '';
+  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。' + what + 'を候補にするよ' + extra + '（画像は端末の外に出ないよ）';
   $('#ocrCands').innerHTML = '';
   $('#ocrRaw').textContent = '';
   $('#rawWrap').style.display = 'none';
   $('#ocrErr').classList.remove('show');
   $('#ocrPreview').style.display = 'none';
   $('#ocrStatus').classList.remove('show');
-  $('#manualVal').value = state.items[id].val || '';
+  $('#manualVal').value = manualValue(state.items[id].val, item.kind);
   openModal('ocrModal');
 }
 
@@ -1253,9 +1254,12 @@ $('#fileInput').addEventListener('change', async (e)=>{
 });
 
 $('#manualSet').addEventListener('click', ()=>{
-  const v = $('#manualVal').value;
   if(!ocrItem) return;
-  state.items[ocrItem].val = v; save(true); render(); closeModal('ocrModal');
+  const item = ALL.find(x=>x.id===ocrItem);
+  const raw = $('#manualVal').value;
+  const nv = num(raw);
+  state.items[ocrItem].val = (item && item.kind === 'berry' && nv !== null) ? Math.round(nv).toLocaleString('ja-JP') : raw;
+  save(true); render(); closeModal('ocrModal');
   toast('数字を入れたよ🎀');
 });
 async function runOCR(file){
@@ -1459,7 +1463,13 @@ function showCandidates(text){
   }).join('');
   // 第1候補を手入力欄にも入れておく
   const first = cands[0];
-  $('#manualVal').value = (kind === 'skill') ? first.v.toFixed(1) : Math.round(first.v).toLocaleString('ja-JP');
+  $('#manualVal').value = manualValue(first.v, kind);
+}
+
+function manualValue(v, kind){
+  const n = num(v);
+  if(n === null) return '';
+  return (kind === 'skill') ? String(Math.round(n*10)/10) : String(Math.round(n));
 }
 
 document.addEventListener('click', (e)=>{
