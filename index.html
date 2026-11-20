@@ -1128,13 +1128,17 @@ document.addEventListener('input', (e)=>{
     if(card){
       const sub = card.querySelector('.sub'); if(sub) sub.textContent = subText(item);
       const area = card.querySelector('.numarea'); if(area) area.innerHTML = numInner(item);
+      // 目標を変えただけのお祝いはしない（値のライン越えだけを祝う）
+      delete card.dataset.celebrated;
+      delete card.dataset.celebratedIdeal;
+      delete card.dataset.celebratedOk;
     }
-    updateCardJudge(id);
+    updateCardJudge(id, false);
     return;
   }
 });
 
-function updateCardJudge(id){
+function updateCardJudge(id, celebrate){
   const item = ALL.find(x=>x.id===id); if(!item) return;
   const card = document.querySelector('.card[data-id="' + id + '"]'); if(!card) return;
   const wrap = card.querySelector('.judgewrap'); if(!wrap) return;
@@ -1145,7 +1149,7 @@ function updateCardJudge(id){
   const ratio = (n !== null && n > 0) ? n / pass : 0;
   const idealRatio = (ideal && ideal > 0) ? ideal / pass : Infinity;
 
-  if(n !== null && n > 0){
+  if(celebrate !== false && n !== null && n > 0){
     const hitIdeal = ratio >= idealRatio && (prev === null || prev < idealRatio) && !card.dataset.celebratedIdeal;
     const hitPass  = ratio >= 1 && (prev === null || prev < 1) && !card.dataset.celebrated;
     const hitFood2 = item.kind === 'food' && ratio >= 2/3 && ratio < 1 && (prev === null || prev < 2/3) && !card.dataset.celebratedOk;
