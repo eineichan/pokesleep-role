@@ -1236,8 +1236,8 @@ function openOCR(id){
   const item = ALL.find(x=>x.id===id);
   ocrKind = item.kind;
   const what = item.kind==='food' ? '1日の個数' : (item.kind==='berry' ? '1日のきのみエナジー' : '1日のスキル回数');
-  const extra = item.kind==='berry' ? '（カンマ付きの大きい数字もOK）' : '';
-  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。' + what + 'を候補にするよ' + extra + '（画像は端末の外に出ないよ）';
+  const extra = item.kind==='berry' ? '（カンマ付きの大きい数字もOK。' : '（';
+  $('#ocrTargetName').textContent = item.name + '：にとよんの画面をスクショして選んでね。' + what + 'を候補にするよ' + extra + '画像は端末の外に出ないよ）';
   $('#ocrCands').innerHTML = '';
   $('#ocrRaw').textContent = '';
   $('#rawWrap').style.display = 'none';
