@@ -1352,6 +1352,13 @@ function loadTesseractLib(){
 }
 
 /* 数字候補の抽出：食材＝個数 / きのみ＝エナジー（カンマの大数値も）/ スキル＝回数 */
+function normThousands(s){
+  // OCRは「12, 240」「12 240」「12.240」のように桁区切りをばらすので、まず繋げる
+  return String(s)
+    .replace(/(\d)\s*[,、]\s*(\d{3})(?!\d)/g, '$1$2')
+    .replace(/(\d)\s+(\d{3})(?!\d)/g, '$1$2')
+    .replace(/(\d)\.(\d{3})(?!\d)/g, '$1$2');
+}
 function extractNumbers(text, kind, hint){
   const out = [];
   const seen = new Set();
@@ -1363,11 +1370,10 @@ function extractNumbers(text, kind, hint){
   };
 
   if(kind === 'berry'){
-    const t = text
+    const t = normThousands(text)
       .replace(/\d+(?:\.\d+)?\s*[%％]/g, ' ')
       .replace(/[Ll][Vv]\.?\s*\d+/g, ' ')
-      .replace(/\d{1,3}(?:,\d{3})+\s*(?:秒|回|匹|頭|時間|びょう)/g, ' ')   // 2,300秒 はエナジーじゃない
-      .replace(/\d{4,6}\s*(?:秒|回|匹|頭|時間|びょう)/g, ' ');
+      .replace(/\d{4,6}\s*(?:秒|回|匹|頭|時間|びょう)/g, ' ');   // 2300秒 はエナジーじゃない
     // 「きのみ」のうしろに出る最初のエナジー値を最優先（総エナジーよりきのみを先に）
     const sec = t.match(/きのみ[^0-9]{0,24}(\d{1,3}(?:,\d{3})+|\d{4,6})/);
     if(sec){
@@ -1386,7 +1392,7 @@ function extractNumbers(text, kind, hint){
   }
 
   if(kind === 'skill'){
-    const t = text
+    const t = normThousands(text)
       .replace(/\d+(?:\.\d+)?\s*[%％]/g, ' ')
       .replace(/[Ll][Vv]\.?\s*\d+/g, ' ');
     // 「◯回」の並びは きのみ→食材→スキル の順なので、最後の1つを最優先
@@ -1407,7 +1413,7 @@ function extractNumbers(text, kind, hint){
     return out.slice(0, 10);
   }
 
-  const t = text
+  const t = normThousands(text)
     .replace(/\d{1,3}(?:[,\s]\d{3})+/g, ' ')                 // 12,240 / 12 240
     .replace(/\d+(?:\.\d+)?\s*[%％]/g, ' ')                   // 94.2%
     .replace(/[Ll][Vv]\.?\s*\d+/g, ' ')                        // Lv.60
